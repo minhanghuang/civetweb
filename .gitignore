@@ -303,3 +303,5 @@ crash-[0-9a-f]*
 leak-[0-9a-f]*
 slow-unit-[0-9a-f]*
 civetweb_fuzz?
+build
+
