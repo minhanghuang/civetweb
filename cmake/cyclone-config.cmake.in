@@ -1,13 +1,13 @@
 @PACKAGE_INIT@
 include(CMakeFindDependencyMacro)
 
-set_and_check(civetweb_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
-set_and_check(civetweb_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
-set_and_check(civetweb_LIBRARY_DIRS "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
-set(civetweb_LIBRARIES civetweb)
+set_and_check(cyclone_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(cyclone_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(cyclone_LIBRARY_DIRS "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+set(cyclone_LIBRARIES cyclone)
 
 if(@CIVETWEB_ENABLE_CXX@)
-  set(civetweb-cpp_LIBRARIES civetweb-cpp)
+  set(cyclone_LIBRARIES cyclone)
 endif()
 
 find_dependency(Threads)
@@ -30,4 +30,4 @@ endif()
 set(CMAKE_MODULE_PATH ${CIVETWEB_SAVED_MODULE_PATH})
 unset(CIVETWEB_SAVED_MODULE_PATH)
 
-include("${CMAKE_CURRENT_LIST_DIR}/civetweb-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/cyclone-targets.cmake")

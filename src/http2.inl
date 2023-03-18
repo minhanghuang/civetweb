@@ -2,7 +2,6 @@
  * There may be memory leaks, security vulnerabilities, ...
  */
 
-
 /***********************************************************************/
 /***  HPACK                                                          ***/
 /***********************************************************************/
@@ -11,70 +10,69 @@
  * https://tools.ietf.org/html/rfc7541#appendix-A
  */
 
-static struct mg_header hpack_predefined[62] = {{NULL, NULL},
-                                                {":authority", NULL},
-                                                {":method", "GET"},
-                                                {":method", "POST"},
-                                                {":path", "/"},
-                                                {":path", "/index.html"},
-                                                {":scheme", "http"},
-                                                {":scheme", "https"},
-                                                {":status", "200"},
-                                                {":status", "204"},
-                                                {":status", "206"},
-                                                {":status", "304"},
-                                                {":status", "400"},
-                                                {":status", "404"},
-                                                {":status", "500"},
-                                                {"accept-charset", NULL},
-                                                {"accept-encoding", NULL},
-                                                {"accept-language", NULL},
-                                                {"accept-ranges", NULL},
-                                                {"accept", NULL},
-                                                {"access-control-allow-origin",
-                                                 NULL},
-                                                {"age", NULL},
-                                                {"allow", NULL},
-                                                {"authorization", NULL},
-                                                {"cache-control", NULL},
-                                                {"content-encoding", NULL},
-                                                {"content-disposition", NULL},
-                                                {"content-language", NULL},
-                                                {"content-length", NULL},
-                                                {"content-location", NULL},
-                                                {"content-range", NULL},
-                                                {"content-type", NULL},
-                                                {"cookie", NULL},
-                                                {"date", NULL},
-                                                {"etag", NULL},
-                                                {"expect", NULL},
-                                                {"expires", NULL},
-                                                {"from", NULL},
-                                                {"host", NULL},
-                                                {"if-match", NULL},
-                                                {"if-modified-since", NULL},
-                                                {"if-none-match", NULL},
-                                                {"if-range", NULL},
-                                                {"if-unmodified-since", NULL},
-                                                {"last-modified", NULL},
-                                                {"link", NULL},
-                                                {"location", NULL},
-                                                {"max-forwards", NULL},
-                                                {"proxy-authenticate", NULL},
-                                                {"proxy-authorization", NULL},
-                                                {"range", NULL},
-                                                {"referer", NULL},
-                                                {"refresh", NULL},
-                                                {"retry-after", NULL},
-                                                {"server", NULL},
-                                                {"set-cookie", NULL},
-                                                {"strict-transport-security",
-                                                 NULL},
-                                                {"transfer-encoding", NULL},
-                                                {"user-agent", NULL},
-                                                {"vary", NULL},
-                                                {"via", NULL},
-                                                {"www-authenticate", NULL}};
+static struct mg_header hpack_predefined[62] = {
+    {NULL, NULL},
+    {":authority", NULL},
+    {":method", "GET"},
+    {":method", "POST"},
+    {":path", "/"},
+    {":path", "/index.html"},
+    {":scheme", "http"},
+    {":scheme", "https"},
+    {":status", "200"},
+    {":status", "204"},
+    {":status", "206"},
+    {":status", "304"},
+    {":status", "400"},
+    {":status", "404"},
+    {":status", "500"},
+    {"accept-charset", NULL},
+    {"accept-encoding", NULL},
+    {"accept-language", NULL},
+    {"accept-ranges", NULL},
+    {"accept", NULL},
+    {"access-control-allow-origin", NULL},
+    {"age", NULL},
+    {"allow", NULL},
+    {"authorization", NULL},
+    {"cache-control", NULL},
+    {"content-encoding", NULL},
+    {"content-disposition", NULL},
+    {"content-language", NULL},
+    {"content-length", NULL},
+    {"content-location", NULL},
+    {"content-range", NULL},
+    {"content-type", NULL},
+    {"cookie", NULL},
+    {"date", NULL},
+    {"etag", NULL},
+    {"expect", NULL},
+    {"expires", NULL},
+    {"from", NULL},
+    {"host", NULL},
+    {"if-match", NULL},
+    {"if-modified-since", NULL},
+    {"if-none-match", NULL},
+    {"if-range", NULL},
+    {"if-unmodified-since", NULL},
+    {"last-modified", NULL},
+    {"link", NULL},
+    {"location", NULL},
+    {"max-forwards", NULL},
+    {"proxy-authenticate", NULL},
+    {"proxy-authorization", NULL},
+    {"range", NULL},
+    {"referer", NULL},
+    {"refresh", NULL},
+    {"retry-after", NULL},
+    {"server", NULL},
+    {"set-cookie", NULL},
+    {"strict-transport-security", NULL},
+    {"transfer-encoding", NULL},
+    {"user-agent", NULL},
+    {"vary", NULL},
+    {"via", NULL},
+    {"www-authenticate", NULL}};
 
 /* Huffman decoding: https://tools.ietf.org/html/rfc7541#appendix-B
 
@@ -338,9 +336,9 @@ static struct mg_header hpack_predefined[62] = {{NULL, NULL},
 */
 
 struct {
-	uint8_t decoded;
-	uint8_t bitcount;
-	uint32_t encoded;
+  uint8_t decoded;
+  uint8_t bitcount;
+  uint32_t encoded;
 } hpack_huff_dec[] = {
     {48, 5, 0x0},
     {49, 5, 0x1},
@@ -602,19 +600,17 @@ struct {
 };
 
 /* highest value with 5, 6, 7, ... 28, 29, 30 and all (32) bits */
-uint32_t hpack_huff_end_code[] = {0x9,       0x2d,       0x7b,       0xfd,
-                                  0,         0x3fc,      0x7fc,      0xffb,
-                                  0x1ffd,    0x3ffd,     0x7ffe,     0,
-                                  0,         0,          0x7fff2,    0xfffed,
-                                  0x1fffe8,  0x3fffeb,   0x7ffff4,   0xfffff5,
-                                  0x1ffffef, 0x3ffffee,  0x7fffff0,  0xffffffe,
-                                  0,         0x3ffffffe, 0xFFFFFFFFu};
+uint32_t hpack_huff_end_code[] = {
+    0x9,      0x2d,       0x7b,       0xfd,      0,         0x3fc,
+    0x7fc,    0xffb,      0x1ffd,     0x3ffd,    0x7ffe,    0,
+    0,        0,          0x7fff2,    0xfffed,   0x1fffe8,  0x3fffeb,
+    0x7ffff4, 0xfffff5,   0x1ffffef,  0x3ffffee, 0x7fffff0, 0xffffffe,
+    0,        0x3ffffffe, 0xFFFFFFFFu};
 
 /* lowest index with 5, 6, 7, ... 28, 29, 30 and all (32) bits */
 uint8_t hpack_huff_start_index[] = {0,   10,  36,  68,  0,   74,  79, 82,  84,
                                     90,  92,  0,   0,   0,   95,  98, 106, 119,
                                     145, 174, 186, 190, 205, 224, 0,  253, 0};
-
 
 /* Function to decode an integer from a HPACK encoded block */
 /* Integers have a variable size encoding, according to the RFC.
@@ -622,30 +618,25 @@ uint8_t hpack_huff_start_index[] = {0,   10,  36,  68,  0,   74,  79, 82,  84,
  * the first byte. The index *i is advanced until the end of the
  * encoded integer.
  */
-static uint64_t
-hpack_getnum(const uint8_t *buf,
-             int *i,
-             uint8_t idx_mask,
-             struct mg_context *ctx)
-{
-	uint64_t num = (buf[*i] & idx_mask);
+static uint64_t hpack_getnum(const uint8_t* buf, int* i, uint8_t idx_mask,
+                             struct mg_context* ctx) {
+  uint64_t num = (buf[*i] & idx_mask);
 
-	(void)ctx;
+  (void)ctx;
 
-	if (num == idx_mask) {
-		/* Algorithm from https://tools.ietf.org/html/rfc7541#section-5.1 */
-		uint32_t M = 0;
-		do {
-			(*i)++;
-			num = num + ((buf[*i] & 0x7F) << M);
-			M += 7;
-		} while ((buf[*i] & 0x80) == 0x80);
-	}
+  if (num == idx_mask) {
+    /* Algorithm from https://tools.ietf.org/html/rfc7541#section-5.1 */
+    uint32_t M = 0;
+    do {
+      (*i)++;
+      num = num + ((buf[*i] & 0x7F) << M);
+      M += 7;
+    } while ((buf[*i] & 0x80) == 0x80);
+  }
 
-	(*i)++;
-	return num;
+  (*i)++;
+  return num;
 }
-
 
 /* Function to decode a string from a HPACK encoded block */
 /* Strings have a variable size and can be either encoded directly (8 bits
@@ -653,518 +644,459 @@ hpack_getnum(const uint8_t *buf,
  * The string starts at index *i. This index is advanced until the end of
  * the encoded string.
  */
-static char *
-hpack_decode(const uint8_t *buf, int *i, int max_i, struct mg_context *ctx)
-{
-	uint64_t byte_len64;
-	int byte_len;
-	int bit_len;
-	uint8_t is_huff = ((buf[*i] & 0x80) == 0x80);
+static char* hpack_decode(const uint8_t* buf, int* i, int max_i,
+                          struct mg_context* ctx) {
+  uint64_t byte_len64;
+  int byte_len;
+  int bit_len;
+  uint8_t is_huff = ((buf[*i] & 0x80) == 0x80);
 
-	/* Get length of string in bytes */
-	byte_len64 = hpack_getnum(buf, i, 0x7f, ctx);
-	if (byte_len64 > 1024) {
-		/* TODO */
-		return NULL;
-	}
-	byte_len = (int)byte_len64;
-	bit_len = byte_len * 8;
+  /* Get length of string in bytes */
+  byte_len64 = hpack_getnum(buf, i, 0x7f, ctx);
+  if (byte_len64 > 1024) {
+    /* TODO */
+    return NULL;
+  }
+  byte_len = (int)byte_len64;
+  bit_len = byte_len * 8;
 
-	/* check size */
-	if ((*i) + byte_len > max_i) {
-		return NULL;
-	}
+  /* check size */
+  if ((*i) + byte_len > max_i) {
+    return NULL;
+  }
 
-	/* Now read the string */
-	if (!is_huff) {
-		/* Not huffman encoded: Copy directly */
-		char *result = (char *)mg_malloc_ctx(byte_len + 1, ctx);
-		if (result) {
-			memcpy(result, buf + (*i), byte_len);
-			result[byte_len] = 0;
-		}
-		(*i) += byte_len;
-		return result;
+  /* Now read the string */
+  if (!is_huff) {
+    /* Not huffman encoded: Copy directly */
+    char* result = (char*)mg_malloc_ctx(byte_len + 1, ctx);
+    if (result) {
+      memcpy(result, buf + (*i), byte_len);
+      result[byte_len] = 0;
+    }
+    (*i) += byte_len;
+    return result;
 
-	} else {
-		/* Huffman encoded: need to decode bitwise */
-		const uint8_t *pData =
-		    buf + (*i);           /* begin pointer of bit input string */
-		int bitRead = 0;          /* number of encoded bits read */
-		uint32_t bytesStored = 0; /* number of decoded bytes stored */
-		uint8_t str[2048];        /* storage buffer for decoded string */
+  } else {
+    /* Huffman encoded: need to decode bitwise */
+    const uint8_t* pData = buf + (*i); /* begin pointer of bit input string */
+    int bitRead = 0;                   /* number of encoded bits read */
+    uint32_t bytesStored = 0;          /* number of decoded bytes stored */
+    uint8_t str[2048];                 /* storage buffer for decoded string */
 
-		for (;;) {
-			uint32_t accu = 0; /* accu register: collect bits */
-			uint8_t bc = 0;    /* number of bits collected */
-			int n;
+    for (;;) {
+      uint32_t accu = 0; /* accu register: collect bits */
+      uint8_t bc = 0;    /* number of bits collected */
+      int n;
 
-			/* Collect bits in this loop, until we have a valid huff code in
-			 * accu */
-			do {
-				accu <<= 1;
-				accu |= (pData[bitRead / 8] >> (7 - (bitRead & 7))) & 1;
-				bitRead++;
-				bc++;
-				if (bitRead > bit_len) {
-					/* We used all bits. Return the decoded string. */
-					str[bytesStored] = 0; /* Terminate string */
-					(*i) += byte_len;     /* Advance parsing index */
-					return mg_strdup_ctx((char *)str,
-					                     ctx); /* Return a string copy */
-				}
-			} while ((bc < 5) || (accu > hpack_huff_end_code[bc - 5]));
+      /* Collect bits in this loop, until we have a valid huff code in
+       * accu */
+      do {
+        accu <<= 1;
+        accu |= (pData[bitRead / 8] >> (7 - (bitRead & 7))) & 1;
+        bitRead++;
+        bc++;
+        if (bitRead > bit_len) {
+          /* We used all bits. Return the decoded string. */
+          str[bytesStored] = 0;                  /* Terminate string */
+          (*i) += byte_len;                      /* Advance parsing index */
+          return mg_strdup_ctx((char*)str, ctx); /* Return a string copy */
+        }
+      } while ((bc < 5) || (accu > hpack_huff_end_code[bc - 5]));
 
-			/* Find matching code in huffman encoding table */
-			for (n = hpack_huff_start_index[bc - 5]; n < 256; n++) {
-				if (accu == hpack_huff_dec[n].encoded) {
-					str[bytesStored] = hpack_huff_dec[n].decoded;
-					bytesStored++;
-					break;
-				}
-			}
-			if (bytesStored == sizeof(str)) {
-				/* too long */
-				return 0;
-			}
-		}
-	}
+      /* Find matching code in huffman encoding table */
+      for (n = hpack_huff_start_index[bc - 5]; n < 256; n++) {
+        if (accu == hpack_huff_dec[n].encoded) {
+          str[bytesStored] = hpack_huff_dec[n].decoded;
+          bytesStored++;
+          break;
+        }
+      }
+      if (bytesStored == sizeof(str)) {
+        /* too long */
+        return 0;
+      }
+    }
+  }
 }
 
+static void append_bits(uint8_t* target, uint32_t offset, uint32_t value,
+                        uint8_t value_bits) {
+  uint32_t offset_bytes = offset / 8;
+  uint32_t offset_bits = offset % 8;
+  uint32_t remaining_bits, ac;
 
-static void
-append_bits(uint8_t *target,
-            uint32_t offset,
-            uint32_t value,
-            uint8_t value_bits)
-{
-	uint32_t offset_bytes = offset / 8;
-	uint32_t offset_bits = offset % 8;
-	uint32_t remaining_bits, ac;
+  value &= ~(0xFFFFFFFF << value_bits);
 
-	value &= ~(0xFFFFFFFF << value_bits);
+  remaining_bits = 8 - offset_bits;
 
-	remaining_bits = 8 - offset_bits;
+  if (value_bits <= remaining_bits) {
+    ac = value << (remaining_bits - value_bits);
+    target[offset_bytes] |= ac;
+    return;
+  }
 
-	if (value_bits <= remaining_bits) {
-		ac = value << (remaining_bits - value_bits);
-		target[offset_bytes] |= ac;
-		return;
-	}
-
-	ac = value >> (value_bits - remaining_bits);
-	target[offset_bytes] |= ac;
-	append_bits(target,
-	            offset + remaining_bits,
-	            value,
-	            value_bits - remaining_bits);
+  ac = value >> (value_bits - remaining_bits);
+  target[offset_bytes] |= ac;
+  append_bits(target, offset + remaining_bits, value,
+              value_bits - remaining_bits);
 }
 
+static int hpack_encode(uint8_t* store, const char* load, int lower) {
+  uint32_t nohuff_len = strlen(load);
 
-static int
-hpack_encode(uint8_t *store, const char *load, int lower)
-{
-	uint32_t nohuff_len = strlen(load);
+  uint32_t len_bits = 0;
+  uint32_t len_bytes;
+  uint32_t spare_bits;
+  uint32_t i;
 
-	uint32_t len_bits = 0;
-	uint32_t len_bytes;
-	uint32_t spare_bits;
-	uint32_t i;
+  memset(store, 0, nohuff_len + 1);
 
-	memset(store, 0, nohuff_len + 1);
+  for (i = 0; i < nohuff_len; i++) {
+    uint8_t b = (uint8_t)((char)(lower ? tolower(load[i]) : load[i]));
+    int idx;
 
-	for (i = 0; i < nohuff_len; i++) {
-		uint8_t b = (uint8_t)((char)(lower ? tolower(load[i]) : load[i]));
-		int idx;
+    for (idx = 0; idx <= 255; idx++) {
+      if (hpack_huff_dec[idx].decoded == b) {
+        append_bits((uint8_t*)store + 1, len_bits, hpack_huff_dec[idx].encoded,
+                    hpack_huff_dec[idx].bitcount);
+        len_bits += hpack_huff_dec[idx].bitcount;
+        break;
+      }
+    }
+  }
 
-		for (idx = 0; idx <= 255; idx++) {
-			if (hpack_huff_dec[idx].decoded == b) {
-				append_bits((uint8_t *)store + 1,
-				            len_bits,
-				            hpack_huff_dec[idx].encoded,
-				            hpack_huff_dec[idx].bitcount);
-				len_bits += hpack_huff_dec[idx].bitcount;
-				break;
-			}
-		}
-	}
+  len_bytes = (len_bits + 7) / 8;
+  spare_bits = len_bytes * 8 - len_bits;
+  if (spare_bits) {
+    append_bits((uint8_t*)store + 1, len_bits, 0xFFFFFFFF, spare_bits);
+  }
 
-	len_bytes = (len_bits + 7) / 8;
-	spare_bits = len_bytes * 8 - len_bits;
-	if (spare_bits) {
-		append_bits((uint8_t *)store + 1, len_bits, 0xFFFFFFFF, spare_bits);
-	}
+  if (len_bytes >= 127) {
+    // TODO: Shift string and encode len in more bytes
+    return 0;
+  }
+  *store = 0x80 + (uint8_t)len_bytes;
 
-	if (len_bytes >= 127) {
-		// TODO: Shift string and encode len in more bytes
-		return 0;
-	}
-	*store = 0x80 + (uint8_t)len_bytes;
+  if ((len_bytes >= nohuff_len) && (0)) {
+    *store = (uint8_t)nohuff_len;
+    if (lower) {
+      for (i = 1; i <= nohuff_len; i++) {
+        store[i] = tolower(load[i]);
+      }
+    } else {
+      memcpy(store + 1, load, nohuff_len);
+    }
+    return nohuff_len + 1;
+  } else {
+    /*
+    int i = 0;
+    char *test = hpack_decode(store, &i, NULL);
+    i = i; // breakpoint for debugging / testing
+    */
+  }
 
-	if ((len_bytes >= nohuff_len) && (0)) {
-		*store = (uint8_t)nohuff_len;
-		if (lower) {
-			for (i = 1; i <= nohuff_len; i++) {
-				store[i] = tolower(load[i]);
-			}
-		} else {
-			memcpy(store + 1, load, nohuff_len);
-		}
-		return nohuff_len + 1;
-	} else {
-		/*
-		int i = 0;
-		char *test = hpack_decode(store, &i, NULL);
-		i = i; // breakpoint for debugging / testing
-		*/
-	}
-
-	return len_bytes + 1;
+  return len_bytes + 1;
 }
-
 
 /***********************************************************************/
 /***  HTTP 2                                                         ***/
 /***********************************************************************/
 
-
 static const char http2_pri[] = "PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n";
 static const unsigned char http2_pri_len = 24; /* = strlen(http2_pri) */
 
-
 /* Read and check the HTTP/2 primer/preface:
  * See https://tools.ietf.org/html/rfc7540#section-3.5 */
-static int
-is_valid_http2_primer(struct mg_connection *conn)
-{
-	size_t pri_len = http2_pri_len;
-	char buf[32]; /* Buffer must hold 24 bytes primer */
+static int is_valid_http2_primer(struct mg_connection* conn) {
+  size_t pri_len = http2_pri_len;
+  char buf[32]; /* Buffer must hold 24 bytes primer */
 
-	int read_pri_len = mg_read(conn, buf, pri_len);
-	if (read_pri_len != (int)pri_len) {
-		/* Size does not match.
-		 * This includes cases where mg_read returns error codes */
-		return 0;
-	}
-	if (0 != memcmp(buf, http2_pri, pri_len)) {
-		/* Primer does not match */
-		return 0;
-	}
-	/* Primer does match */
-	return 1;
+  int read_pri_len = mg_read(conn, buf, pri_len);
+  if (read_pri_len != (int)pri_len) {
+    /* Size does not match.
+     * This includes cases where mg_read returns error codes */
+    return 0;
+  }
+  if (0 != memcmp(buf, http2_pri, pri_len)) {
+    /* Primer does not match */
+    return 0;
+  }
+  /* Primer does match */
+  return 1;
 }
 
+#define mg_xwrite(conn, data, len)                                   \
+  push_all((conn)->phys_ctx, NULL, (conn)->client.sock, (conn)->ssl, \
+           (const char*)(data), (int)(len))
 
-#define mg_xwrite(conn, data, len)                                             \
-	push_all((conn)->phys_ctx,                                                 \
-	         NULL,                                                             \
-	         (conn)->client.sock,                                              \
-	         (conn)->ssl,                                                      \
-	         (const char *)(data),                                             \
-	         (int)(len))
+static void http2_settings_acknowledge(struct mg_connection* conn) {
+  unsigned char http2_set_ackn_frame[9] = {0, 0, 0, 4, 1, 0, 0, 0, 0};
 
-
-static void
-http2_settings_acknowledge(struct mg_connection *conn)
-{
-	unsigned char http2_set_ackn_frame[9] = {0, 0, 0, 4, 1, 0, 0, 0, 0};
-
-	DEBUG_TRACE("%s", "Sending settings frame");
-	mg_xwrite(conn, http2_set_ackn_frame, 9);
+  DEBUG_TRACE("%s", "Sending settings frame");
+  mg_xwrite(conn, http2_set_ackn_frame, 9);
 }
-
 
 struct http2_settings {
-	uint32_t settings_header_table_size;
-	uint32_t settings_enable_push;
-	uint32_t settings_max_concurrent_streams;
-	uint32_t settings_initial_window_size;
-	uint32_t settings_max_frame_size;
-	uint32_t settings_max_header_list_size;
+  uint32_t settings_header_table_size;
+  uint32_t settings_enable_push;
+  uint32_t settings_max_concurrent_streams;
+  uint32_t settings_initial_window_size;
+  uint32_t settings_max_frame_size;
+  uint32_t settings_max_header_list_size;
 };
 
+const struct http2_settings http2_default_settings = {4096,  1,     UINT32_MAX,
+                                                      65535, 16384, UINT32_MAX};
 
-const struct http2_settings http2_default_settings =
-    {4096, 1, UINT32_MAX, 65535, 16384, UINT32_MAX};
-
-const struct http2_settings http2_civetweb_server_settings =
-    {4096, 0, 100, 65535, 16384, 65535};
-
+const struct http2_settings http2_civetweb_server_settings = {
+    4096, 0, 100, 65535, 16384, 65535};
 
 enum {
-	HTTP2_ERR_NO_ERROR = 0,
-	HTTP2_ERR_PROTOCOL_ERROR,
-	HTTP2_ERR_INTERNAL_ERROR,
-	HTTP2_ERR_FLOW_CONTROL_ERROR,
-	HTTP2_ERR_SETTINGS_TIMEOUT,
-	HTTP2_ERR_STREAM_CLOSED,
-	HTTP2_ERR_FRAME_SIZE_ERROR,
-	HTTP2_ERR_REFUSED_STREAM,
-	HTTP2_ERR_CANCEL,
-	HTTP2_ERR_COMPRESSION_ERROR,
-	HTTP2_ERR_CONNECT_ERROR,
-	HTTP2_ERR_ENHANCE_YOUR_CALM,
-	HTTP2_ERR_INADEQUATE_SECURITY,
-	HTTP2_ERR_HTTP_1_1_REQUIRED
+  HTTP2_ERR_NO_ERROR = 0,
+  HTTP2_ERR_PROTOCOL_ERROR,
+  HTTP2_ERR_INTERNAL_ERROR,
+  HTTP2_ERR_FLOW_CONTROL_ERROR,
+  HTTP2_ERR_SETTINGS_TIMEOUT,
+  HTTP2_ERR_STREAM_CLOSED,
+  HTTP2_ERR_FRAME_SIZE_ERROR,
+  HTTP2_ERR_REFUSED_STREAM,
+  HTTP2_ERR_CANCEL,
+  HTTP2_ERR_COMPRESSION_ERROR,
+  HTTP2_ERR_CONNECT_ERROR,
+  HTTP2_ERR_ENHANCE_YOUR_CALM,
+  HTTP2_ERR_INADEQUATE_SECURITY,
+  HTTP2_ERR_HTTP_1_1_REQUIRED
 };
 
+static void http2_send_settings(struct mg_connection* conn,
+                                const struct http2_settings* set) {
+  uint16_t id;
+  uint32_t data;
+  uint8_t http2_settings_frame[9] = {0, 0, 36, 4, 0, 0, 0, 0, 0};
+  mg_xwrite(conn, http2_settings_frame, 9);
 
-static void
-http2_send_settings(struct mg_connection *conn,
-                    const struct http2_settings *set)
-{
-	uint16_t id;
-	uint32_t data;
-	uint8_t http2_settings_frame[9] = {0, 0, 36, 4, 0, 0, 0, 0, 0};
-	mg_xwrite(conn, http2_settings_frame, 9);
+  id = htons(1);
+  data = htonl(set->settings_header_table_size);
+  mg_xwrite(conn, &id, 2);
+  mg_xwrite(conn, &data, 4);
 
-	id = htons(1);
-	data = htonl(set->settings_header_table_size);
-	mg_xwrite(conn, &id, 2);
-	mg_xwrite(conn, &data, 4);
+  id = htons(1);
+  data = htonl(set->settings_enable_push);
+  mg_xwrite(conn, &id, 2);
+  mg_xwrite(conn, &data, 4);
 
-	id = htons(1);
-	data = htonl(set->settings_enable_push);
-	mg_xwrite(conn, &id, 2);
-	mg_xwrite(conn, &data, 4);
+  id = htons(1);
+  data = htonl(set->settings_max_concurrent_streams);
+  mg_xwrite(conn, &id, 2);
+  mg_xwrite(conn, &data, 4);
 
-	id = htons(1);
-	data = htonl(set->settings_max_concurrent_streams);
-	mg_xwrite(conn, &id, 2);
-	mg_xwrite(conn, &data, 4);
+  id = htons(1);
+  data = htonl(set->settings_initial_window_size);
+  mg_xwrite(conn, &id, 2);
+  mg_xwrite(conn, &data, 4);
 
-	id = htons(1);
-	data = htonl(set->settings_initial_window_size);
-	mg_xwrite(conn, &id, 2);
-	mg_xwrite(conn, &data, 4);
+  id = htons(1);
+  data = htonl(set->settings_max_frame_size);
+  mg_xwrite(conn, &id, 2);
+  mg_xwrite(conn, &data, 4);
 
-	id = htons(1);
-	data = htonl(set->settings_max_frame_size);
-	mg_xwrite(conn, &id, 2);
-	mg_xwrite(conn, &data, 4);
+  id = htons(1);
+  data = htonl(set->settings_max_header_list_size);
+  mg_xwrite(conn, &id, 2);
+  mg_xwrite(conn, &data, 4);
 
-	id = htons(1);
-	data = htonl(set->settings_max_header_list_size);
-	mg_xwrite(conn, &id, 2);
-	mg_xwrite(conn, &data, 4);
-
-	DEBUG_TRACE("%s", "HTTP2 settings sent");
+  DEBUG_TRACE("%s", "HTTP2 settings sent");
 }
 
+static int http2_send_response_headers(struct mg_connection* conn) {
+  unsigned char http2_header_frame[9] = {0, 0, 0, 1, 4, 0, 0, 0, 0};
+  uint8_t header_bin[1024];
+  uint16_t header_len = 0;
+  int has_date = 0;
+  int has_connection_header = 0;
+  int i, ok;
 
-static int
-http2_send_response_headers(struct mg_connection *conn)
-{
-	unsigned char http2_header_frame[9] = {0, 0, 0, 1, 4, 0, 0, 0, 0};
-	uint8_t header_bin[1024];
-	uint16_t header_len = 0;
-	int has_date = 0;
-	int has_connection_header = 0;
-	int i, ok;
+  if ((conn->status_code < 100) || (conn->status_code > 999)) {
+    /* Invalid status: Set status to "Internal Server Error" */
+    conn->status_code = 500;
+  }
 
-	if ((conn->status_code < 100) || (conn->status_code > 999)) {
-		/* Invalid status: Set status to "Internal Server Error" */
-		conn->status_code = 500;
-	}
+  switch (conn->status_code) {
+    case 200:
+      header_bin[header_len++] = 0x88;
+      break;
+    case 204:
+      header_bin[header_len++] = 0x89;
+      break;
+    case 206:
+      header_bin[header_len++] = 0x8A;
+      break;
+    case 304:
+      header_bin[header_len++] = 0x8B;
+      break;
+    case 400:
+      header_bin[header_len++] = 0x8C;
+      break;
+    case 404:
+      header_bin[header_len++] = 0x8D;
+      break;
+    case 500:
+      header_bin[header_len++] = 0x8E;
+      break;
+    default:
+      header_bin[header_len++] = 0x48;
+      header_bin[header_len++] = 0x03;
+      header_bin[header_len++] = 0x30 + (conn->status_code / 100);
+      header_bin[header_len++] = 0x30 + ((conn->status_code / 10) % 10);
+      header_bin[header_len++] = 0x30 + (conn->status_code % 10);
+      break;
+  }
 
-	switch (conn->status_code) {
-	case 200:
-		header_bin[header_len++] = 0x88;
-		break;
-	case 204:
-		header_bin[header_len++] = 0x89;
-		break;
-	case 206:
-		header_bin[header_len++] = 0x8A;
-		break;
-	case 304:
-		header_bin[header_len++] = 0x8B;
-		break;
-	case 400:
-		header_bin[header_len++] = 0x8C;
-		break;
-	case 404:
-		header_bin[header_len++] = 0x8D;
-		break;
-	case 500:
-		header_bin[header_len++] = 0x8E;
-		break;
-	default:
-		header_bin[header_len++] = 0x48;
-		header_bin[header_len++] = 0x03;
-		header_bin[header_len++] = 0x30 + (conn->status_code / 100);
-		header_bin[header_len++] = 0x30 + ((conn->status_code / 10) % 10);
-		header_bin[header_len++] = 0x30 + (conn->status_code % 10);
-		break;
-	}
+  /* Add all headers */
+  for (i = 0; i < conn->response_info.num_headers; i++) {
+    uint16_t predef = 0;
+    uint16_t j;
 
-	/* Add all headers */
-	for (i = 0; i < conn->response_info.num_headers; i++) {
-		uint16_t predef = 0;
-		uint16_t j;
+    /* Filter headers not valid in HTTP/2 */
+    if (!mg_strcasecmp("Connection",
+                       conn->response_info.http_headers[i].name)) {
+      has_connection_header = 1;
+      continue; /* do not send */
+    }
 
-		/* Filter headers not valid in HTTP/2 */
-		if (!mg_strcasecmp("Connection",
-		                   conn->response_info.http_headers[i].name)) {
-			has_connection_header = 1;
-			continue; /* do not send */
-		}
+    /* Check if this header is known in HPACK (static table index 15 to 61)
+     * see https://tools.ietf.org/html/rfc7541#appendix-A */
+    for (j = 15; j <= 61; j++) {
+      if (!mg_strcasecmp(hpack_predefined[j].name,
+                         conn->response_info.http_headers[i].name)) {
+        predef = j;
+        break;
+      }
+    }
 
-		/* Check if this header is known in HPACK (static table index 15 to 61)
-		 * see https://tools.ietf.org/html/rfc7541#appendix-A */
-		for (j = 15; j <= 61; j++) {
-			if (!mg_strcasecmp(hpack_predefined[j].name,
-			                   conn->response_info.http_headers[i].name)) {
-				predef = j;
-				break;
-			}
-		}
+    if (predef) {
+      /* Predefined header found */
+      header_bin[header_len++] = 0x40 + predef;
+    } else {
+      /* Rare header, do not index */
+      header_bin[header_len++] = 0x10;
+      j = hpack_encode(header_bin + header_len,
+                       conn->response_info.http_headers[i].name, 1);
+      header_len += j;
+    }
 
-		if (predef) {
-			/* Predefined header found */
-			header_bin[header_len++] = 0x40 + predef;
-		} else {
-			/* Rare header, do not index */
-			header_bin[header_len++] = 0x10;
-			j = hpack_encode(header_bin + header_len,
-			                 conn->response_info.http_headers[i].name,
-			                 1);
-			header_len += j;
-		}
+    j = hpack_encode(header_bin + header_len,
+                     conn->response_info.http_headers[i].value, 0);
+    header_len += j;
 
-		j = hpack_encode(header_bin + header_len,
-		                 conn->response_info.http_headers[i].value,
-		                 0);
-		header_len += j;
+    /* Mark required headers as sent */
+    if (!mg_strcasecmp("Date", conn->response_info.http_headers[i].name)) {
+      has_date = 1;
+    }
+  }
 
-		/* Mark required headers as sent */
-		if (!mg_strcasecmp("Date", conn->response_info.http_headers[i].name)) {
-			has_date = 1;
-		}
-	}
+  /* Add required headers, if they have not been sent yet */
+  if (!has_date) {
+    /* Create header frame */
+    char date[64];
+    uint8_t date_len;
+    time_t curtime = time(NULL);
 
-	/* Add required headers, if they have not been sent yet */
-	if (!has_date) {
-		/* Create header frame */
-		char date[64];
-		uint8_t date_len;
-		time_t curtime = time(NULL);
+    gmt_time_string(date, sizeof(date), &curtime);
+    date_len = (uint8_t)strlen(date);
 
-		gmt_time_string(date, sizeof(date), &curtime);
-		date_len = (uint8_t)strlen(date);
+    header_bin[header_len++] =
+        0x61; /* "Date" predefined HPACK index 33 (0x21) + 0x40 */
+    header_bin[header_len++] = date_len;
+    memcpy(header_bin + header_len, date, date_len);
+    header_len += date_len;
+  }
 
-		header_bin[header_len++] =
-		    0x61; /* "Date" predefined HPACK index 33 (0x21) + 0x40 */
-		header_bin[header_len++] = date_len;
-		memcpy(header_bin + header_len, date, date_len);
-		header_len += date_len;
-	}
+  http2_header_frame[1] = (header_len & 0xFF00) >> 8;
+  http2_header_frame[2] = (header_len & 0xFF);
 
-	http2_header_frame[1] = (header_len & 0xFF00) >> 8;
-	http2_header_frame[2] = (header_len & 0xFF);
+  http2_header_frame[5] = (conn->http2.stream_id & 0xFF000000u) >> 24;
+  http2_header_frame[6] = (conn->http2.stream_id & 0xFF0000u) >> 16;
+  http2_header_frame[7] = (conn->http2.stream_id & 0xFF00u) >> 8;
+  http2_header_frame[8] = (conn->http2.stream_id & 0xFFu);
 
-	http2_header_frame[5] = (conn->http2.stream_id & 0xFF000000u) >> 24;
-	http2_header_frame[6] = (conn->http2.stream_id & 0xFF0000u) >> 16;
-	http2_header_frame[7] = (conn->http2.stream_id & 0xFF00u) >> 8;
-	http2_header_frame[8] = (conn->http2.stream_id & 0xFFu);
+  /* Send header frame */
+  ok = 1;
+  if (mg_xwrite(conn, http2_header_frame, 9) != 9) {
+    ok = 0;
+  } else if (mg_xwrite(conn, header_bin, header_len) != header_len) {
+    ok = 0;
+  }
+  if (ok) {
+    DEBUG_TRACE("HTTP2 response header sent: stream %u", conn->http2.stream_id);
+  } else {
+    DEBUG_TRACE("HTTP2 response header sending error: stream %u",
+                conn->http2.stream_id);
+  }
 
-	/* Send header frame */
-	ok = 1;
-	if (mg_xwrite(conn, http2_header_frame, 9) != 9) {
-		ok = 0;
-	} else if (mg_xwrite(conn, header_bin, header_len) != header_len) {
-		ok = 0;
-	}
-	if (ok) {
-		DEBUG_TRACE("HTTP2 response header sent: stream %u",
-		            conn->http2.stream_id);
-	} else {
-		DEBUG_TRACE("HTTP2 response header sending error: stream %u",
-		            conn->http2.stream_id);
-	}
+  (void)has_connection_header; /* ignore for the moment */
 
-	(void)has_connection_header; /* ignore for the moment */
-
-	return ok;
+  return ok;
 }
 
+static void http2_data_frame_head(struct mg_connection* conn,
+                                  uint32_t frame_size, int is_final) {
+  unsigned char http2_data_frame[9];
+  uint32_t stream_id = conn->http2.stream_id;
 
-static void
-http2_data_frame_head(struct mg_connection *conn,
-                      uint32_t frame_size,
-                      int is_final)
-{
-	unsigned char http2_data_frame[9];
-	uint32_t stream_id = conn->http2.stream_id;
+  http2_data_frame[0] = (frame_size & 0xFF0000) >> 16;
+  http2_data_frame[1] = (frame_size & 0xFF00) >> 8;
+  http2_data_frame[2] = (frame_size & 0xFF);
 
-	http2_data_frame[0] = (frame_size & 0xFF0000) >> 16;
-	http2_data_frame[1] = (frame_size & 0xFF00) >> 8;
-	http2_data_frame[2] = (frame_size & 0xFF);
+  http2_data_frame[3] = 0; /* frame type "DATA" */
+  http2_data_frame[4] = (is_final ? 1 : 0);
 
-	http2_data_frame[3] = 0; /* frame type "DATA" */
-	http2_data_frame[4] = (is_final ? 1 : 0);
+  http2_data_frame[5] = (stream_id & 0xFF000000u) >> 24;
+  http2_data_frame[6] = (stream_id & 0xFF0000u) >> 16;
+  http2_data_frame[7] = (stream_id & 0xFF00u) >> 8;
+  http2_data_frame[8] = (stream_id & 0xFFu);
 
-	http2_data_frame[5] = (stream_id & 0xFF000000u) >> 24;
-	http2_data_frame[6] = (stream_id & 0xFF0000u) >> 16;
-	http2_data_frame[7] = (stream_id & 0xFF00u) >> 8;
-	http2_data_frame[8] = (stream_id & 0xFFu);
+  DEBUG_TRACE("HTTP2 begin data frame: stream %u, frame_size %u (final: %i)",
+              stream_id, frame_size, is_final);
 
-	DEBUG_TRACE("HTTP2 begin data frame: stream %u, frame_size %u (final: %i)",
-	            stream_id,
-	            frame_size,
-	            is_final);
-
-	mg_xwrite(conn, http2_data_frame, 9);
+  mg_xwrite(conn, http2_data_frame, 9);
 }
 
+static void http2_send_window(struct mg_connection* conn, uint32_t stream_id,
+                              uint32_t window_size) {
+  unsigned char http2_window_frame[9] = {0, 0, 4, 8, 0, 0, 0, 0, 0};
+  uint32_t data = htonl(window_size);
 
-static void
-http2_send_window(struct mg_connection *conn,
-                  uint32_t stream_id,
-                  uint32_t window_size)
-{
-	unsigned char http2_window_frame[9] = {0, 0, 4, 8, 0, 0, 0, 0, 0};
-	uint32_t data = htonl(window_size);
+  DEBUG_TRACE("HTTP2 send window_size: stream %u, error %u", stream_id,
+              window_size);
 
-	DEBUG_TRACE("HTTP2 send window_size: stream %u, error %u",
-	            stream_id,
-	            window_size);
-
-	http2_window_frame[5] = (stream_id & 0xFF000000u) >> 24;
-	http2_window_frame[6] = (stream_id & 0xFF0000u) >> 16;
-	http2_window_frame[7] = (stream_id & 0xFF00u) >> 8;
-	http2_window_frame[8] = (stream_id & 0xFFu);
-	mg_xwrite(conn, http2_window_frame, 9);
-	mg_xwrite(conn, &data, 4);
+  http2_window_frame[5] = (stream_id & 0xFF000000u) >> 24;
+  http2_window_frame[6] = (stream_id & 0xFF0000u) >> 16;
+  http2_window_frame[7] = (stream_id & 0xFF00u) >> 8;
+  http2_window_frame[8] = (stream_id & 0xFFu);
+  mg_xwrite(conn, http2_window_frame, 9);
+  mg_xwrite(conn, &data, 4);
 }
 
+static void http2_reset_stream(struct mg_connection* conn, uint32_t stream_id,
+                               uint32_t error_id) {
+  unsigned char http2_reset_frame[9] = {0, 0, 4, 3, 0, 0, 0, 0, 0};
+  uint32_t val = htonl(error_id);
 
-static void
-http2_reset_stream(struct mg_connection *conn,
-                   uint32_t stream_id,
-                   uint32_t error_id)
-{
-	unsigned char http2_reset_frame[9] = {0, 0, 4, 3, 0, 0, 0, 0, 0};
-	uint32_t val = htonl(error_id);
+  DEBUG_TRACE("HTTP2 send reset: stream %u, error %u", stream_id, error_id);
 
-	DEBUG_TRACE("HTTP2 send reset: stream %u, error %u", stream_id, error_id);
-
-	http2_reset_frame[5] = (stream_id & 0xFF000000u) >> 24;
-	http2_reset_frame[6] = (stream_id & 0xFF0000u) >> 16;
-	http2_reset_frame[7] = (stream_id & 0xFF00u) >> 8;
-	http2_reset_frame[8] = (stream_id & 0xFFu);
-	mg_xwrite(conn, http2_reset_frame, 9);
-	mg_xwrite(conn, &val, 4);
+  http2_reset_frame[5] = (stream_id & 0xFF000000u) >> 24;
+  http2_reset_frame[6] = (stream_id & 0xFF0000u) >> 16;
+  http2_reset_frame[7] = (stream_id & 0xFF00u) >> 8;
+  http2_reset_frame[8] = (stream_id & 0xFFu);
+  mg_xwrite(conn, http2_reset_frame, 9);
+  mg_xwrite(conn, &val, 4);
 }
 
-
-static void
-http2_must_use_http1(struct mg_connection *conn)
-{
-	DEBUG_TRACE("HTTP2 not available for this URL (%s)", conn->path_info);
-	http2_reset_stream(conn, conn->http2.stream_id, 0xd);
+static void http2_must_use_http1(struct mg_connection* conn) {
+  DEBUG_TRACE("HTTP2 not available for this URL (%s)", conn->path_info);
+  http2_reset_stream(conn, conn->http2.stream_id, 0xd);
 }
-
 
 /* The HTTP2 implementation collects request headers as array of dynamically
  * allocated string values. This array must be freed once the request is
@@ -1177,14 +1109,14 @@ http2_must_use_http1(struct mg_connection *conn)
 #if defined(DEBUG)
 static int mem_h_count = 0;
 static int mem_d_count = 0;
-#define CHECK_LEAK_HDR_ALLOC(ptr)                                              \
-	DEBUG_TRACE("H NEW %p (%i): %s", ptr, ++mem_h_count, (const char *)ptr)
-#define CHECK_LEAK_HDR_FREE(ptr)                                               \
-	DEBUG_TRACE("H DEL %p (%i): %s", ptr, --mem_h_count, (const char *)ptr)
-#define CHECK_LEAK_DYN_ALLOC(ptr)                                              \
-	DEBUG_TRACE("D NEW %p (%i): %s", ptr, ++mem_d_count, (const char *)ptr)
-#define CHECK_LEAK_DYN_FREE(ptr)                                               \
-	DEBUG_TRACE("D DEL %p (%i): %s", ptr, --mem_d_count, (const char *)ptr)
+#define CHECK_LEAK_HDR_ALLOC(ptr) \
+  DEBUG_TRACE("H NEW %p (%i): %s", ptr, ++mem_h_count, (const char*)ptr)
+#define CHECK_LEAK_HDR_FREE(ptr) \
+  DEBUG_TRACE("H DEL %p (%i): %s", ptr, --mem_h_count, (const char*)ptr)
+#define CHECK_LEAK_DYN_ALLOC(ptr) \
+  DEBUG_TRACE("D NEW %p (%i): %s", ptr, ++mem_d_count, (const char*)ptr)
+#define CHECK_LEAK_DYN_FREE(ptr) \
+  DEBUG_TRACE("D DEL %p (%i): %s", ptr, --mem_d_count, (const char*)ptr)
 #else
 #define CHECK_LEAK_HDR_ALLOC(ptr)
 #define CHECK_LEAK_HDR_FREE(ptr)
@@ -1192,583 +1124,528 @@ static int mem_d_count = 0;
 #define CHECK_LEAK_DYN_FREE(ptr)
 #endif
 
-
 /* The dynamic header table may be resized on a HTTP2 client request.
  * A tablesize=0 will free all memory.
  */
-static void
-purge_dynamic_header_table(struct mg_connection *conn, uint32_t tableSize)
-{
-	DEBUG_TRACE("HTTP2 dynamic header table set to %u", tableSize);
-	while (conn->http2.dyn_table_size > tableSize) {
-		conn->http2.dyn_table_size--;
+static void purge_dynamic_header_table(struct mg_connection* conn,
+                                       uint32_t tableSize) {
+  DEBUG_TRACE("HTTP2 dynamic header table set to %u", tableSize);
+  while (conn->http2.dyn_table_size > tableSize) {
+    conn->http2.dyn_table_size--;
 
-		CHECK_LEAK_DYN_FREE(
-		    conn->http2.dyn_table[conn->http2.dyn_table_size].name);
-		CHECK_LEAK_DYN_FREE(
-		    conn->http2.dyn_table[conn->http2.dyn_table_size].value);
+    CHECK_LEAK_DYN_FREE(conn->http2.dyn_table[conn->http2.dyn_table_size].name);
+    CHECK_LEAK_DYN_FREE(
+        conn->http2.dyn_table[conn->http2.dyn_table_size].value);
 
-		mg_free((void *)conn->http2.dyn_table[conn->http2.dyn_table_size].name);
-		conn->http2.dyn_table[conn->http2.dyn_table_size].name = 0;
-		mg_free(
-		    (void *)conn->http2.dyn_table[conn->http2.dyn_table_size].value);
-		conn->http2.dyn_table[conn->http2.dyn_table_size].value = 0;
-	}
+    mg_free((void*)conn->http2.dyn_table[conn->http2.dyn_table_size].name);
+    conn->http2.dyn_table[conn->http2.dyn_table_size].name = 0;
+    mg_free((void*)conn->http2.dyn_table[conn->http2.dyn_table_size].value);
+    conn->http2.dyn_table[conn->http2.dyn_table_size].value = 0;
+  }
 }
-
 
 /* Internal function to free request header list.
  * Not to be confused with the response header list.
  */
-static void
-free_buffered_request_header_list(struct mg_connection *conn)
-{
-	while (conn->request_info.num_headers > 0) {
-		conn->request_info.num_headers--;
+static void free_buffered_request_header_list(struct mg_connection* conn) {
+  while (conn->request_info.num_headers > 0) {
+    conn->request_info.num_headers--;
 
-		CHECK_LEAK_HDR_FREE(
-		    conn->request_info.http_headers[conn->request_info.num_headers]
-		        .name);
-		CHECK_LEAK_HDR_FREE(
-		    conn->request_info.http_headers[conn->request_info.num_headers]
-		        .value);
+    CHECK_LEAK_HDR_FREE(
+        conn->request_info.http_headers[conn->request_info.num_headers].name);
+    CHECK_LEAK_HDR_FREE(
+        conn->request_info.http_headers[conn->request_info.num_headers].value);
 
-		mg_free((void *)conn->request_info
-		            .http_headers[conn->request_info.num_headers]
-		            .name);
-		conn->request_info.http_headers[conn->request_info.num_headers].name =
-		    0;
-		mg_free((void *)conn->request_info
-		            .http_headers[conn->request_info.num_headers]
-		            .value);
-		conn->request_info.http_headers[conn->request_info.num_headers].value =
-		    0;
-	}
+    mg_free(
+        (void*)conn->request_info.http_headers[conn->request_info.num_headers]
+            .name);
+    conn->request_info.http_headers[conn->request_info.num_headers].name = 0;
+    mg_free(
+        (void*)conn->request_info.http_headers[conn->request_info.num_headers]
+            .value);
+    conn->request_info.http_headers[conn->request_info.num_headers].value = 0;
+  }
 }
-
 
 /* HTTP2 requires a different handling loop */
-static void
-handle_http2(struct mg_connection *conn)
-{
-	unsigned char http2_frame_head[9];
-	uint32_t http2_frame_size;
-	uint8_t http2_frame_type;
-	uint8_t http2_frame_flags;
-	uint32_t http2_frame_stream_id;
-	uint32_t http_window_length = 0;
-	int bytes_read;
-	uint8_t *buf;
-	int my_settings_accepted = 0;
-	const char *my_hpack_headers[128];
+static void handle_http2(struct mg_connection* conn) {
+  unsigned char http2_frame_head[9];
+  uint32_t http2_frame_size;
+  uint8_t http2_frame_type;
+  uint8_t http2_frame_flags;
+  uint32_t http2_frame_stream_id;
+  uint32_t http_window_length = 0;
+  int bytes_read;
+  uint8_t* buf;
+  int my_settings_accepted = 0;
+  const char* my_hpack_headers[128];
 
-	struct http2_settings client_settings = http2_default_settings;
-	struct http2_settings server_settings = http2_default_settings;
+  struct http2_settings client_settings = http2_default_settings;
+  struct http2_settings server_settings = http2_default_settings;
 
-	/* Send own settings */
-	http2_send_settings(conn, &http2_civetweb_server_settings);
-	// http2_send_window(conn, 0, /* 0x3fff0001 */ 1024*1024);
+  /* Send own settings */
+  http2_send_settings(conn, &http2_civetweb_server_settings);
+  // http2_send_window(conn, 0, /* 0x3fff0001 */ 1024*1024);
 
-	/* initialize hpack header table with predefined header fields */
-	memset((void *)my_hpack_headers, 0, sizeof(my_hpack_headers));
-	memcpy((void *)my_hpack_headers,
-	       hpack_predefined,
-	       sizeof(hpack_predefined));
+  /* initialize hpack header table with predefined header fields */
+  memset((void*)my_hpack_headers, 0, sizeof(my_hpack_headers));
+  memcpy((void*)my_hpack_headers, hpack_predefined, sizeof(hpack_predefined));
 
-	buf = (uint8_t *)mg_malloc_ctx(server_settings.settings_max_frame_size,
-	                               conn->phys_ctx);
-	if (!buf) {
-		/* Out of memory */
-		DEBUG_TRACE("%s", "Out of memory for HTTP2 frame");
-		return;
-	}
+  buf = (uint8_t*)mg_malloc_ctx(server_settings.settings_max_frame_size,
+                                conn->phys_ctx);
+  if (!buf) {
+    /* Out of memory */
+    DEBUG_TRACE("%s", "Out of memory for HTTP2 frame");
+    return;
+  }
 
-	for (;;) {
-		/* HTTP/2 is handled frame by frame */
-		int frame_is_end_stream = 0;
-		int frame_is_end_headers = 0;
-		int frame_is_padded = 0;
-		int frame_is_priority = 0;
+  for (;;) {
+    /* HTTP/2 is handled frame by frame */
+    int frame_is_end_stream = 0;
+    int frame_is_end_headers = 0;
+    int frame_is_padded = 0;
+    int frame_is_priority = 0;
 
 #if defined(USE_SERVER_STATS)
-		conn->conn_state = 3; /* HTTP/2 ready */
+    conn->conn_state = 3; /* HTTP/2 ready */
 #endif
 
-		bytes_read = mg_read(conn, http2_frame_head, sizeof(http2_frame_head));
-		if (bytes_read != sizeof(http2_frame_head)) {
-			/* TODO: errormsg */
-			goto clean_http2;
-		}
+    bytes_read = mg_read(conn, http2_frame_head, sizeof(http2_frame_head));
+    if (bytes_read != sizeof(http2_frame_head)) {
+      /* TODO: errormsg */
+      goto clean_http2;
+    }
 
-		/* Extract data from frame header */
-		http2_frame_size = ((uint32_t)http2_frame_head[0] * 0x10000u)
-		                   + ((uint32_t)http2_frame_head[1] * 0x100u)
-		                   + ((uint32_t)http2_frame_head[2]);
-		http2_frame_type = http2_frame_head[3];
-		http2_frame_flags = http2_frame_head[4];
-		http2_frame_stream_id = ((uint32_t)http2_frame_head[5] * 0x1000000u)
-		                        + ((uint32_t)http2_frame_head[6] * 0x10000u)
-		                        + ((uint32_t)http2_frame_head[7] * 0x100u)
-		                        + ((uint32_t)http2_frame_head[8]);
+    /* Extract data from frame header */
+    http2_frame_size = ((uint32_t)http2_frame_head[0] * 0x10000u) +
+                       ((uint32_t)http2_frame_head[1] * 0x100u) +
+                       ((uint32_t)http2_frame_head[2]);
+    http2_frame_type = http2_frame_head[3];
+    http2_frame_flags = http2_frame_head[4];
+    http2_frame_stream_id = ((uint32_t)http2_frame_head[5] * 0x1000000u) +
+                            ((uint32_t)http2_frame_head[6] * 0x10000u) +
+                            ((uint32_t)http2_frame_head[7] * 0x100u) +
+                            ((uint32_t)http2_frame_head[8]);
 
-		frame_is_end_stream = (0 != (http2_frame_flags & 0x01));
-		frame_is_end_headers = (0 != (http2_frame_flags & 0x04));
-		frame_is_padded = (0 != (http2_frame_flags & 0x08));
-		frame_is_priority = (0 != (http2_frame_flags & 0x20));
+    frame_is_end_stream = (0 != (http2_frame_flags & 0x01));
+    frame_is_end_headers = (0 != (http2_frame_flags & 0x04));
+    frame_is_padded = (0 != (http2_frame_flags & 0x08));
+    frame_is_priority = (0 != (http2_frame_flags & 0x20));
 
-		if (http2_frame_size > server_settings.settings_max_frame_size) {
-			/* TODO: Error Message */
-			DEBUG_TRACE("HTTP2 frame too large (%lu)",
-			            (unsigned long)http2_frame_size);
-			goto clean_http2;
-		}
-		bytes_read = mg_read(conn, buf, http2_frame_size);
-		if (bytes_read != (int)http2_frame_size) {
-			/* TODO: Error Message - or read again? */
-			DEBUG_TRACE("HTTP2 read error (%li != %li)",
-			            (signed long int)bytes_read,
-			            (signed long int)http2_frame_size);
-			goto clean_http2;
-		}
+    if (http2_frame_size > server_settings.settings_max_frame_size) {
+      /* TODO: Error Message */
+      DEBUG_TRACE("HTTP2 frame too large (%lu)",
+                  (unsigned long)http2_frame_size);
+      goto clean_http2;
+    }
+    bytes_read = mg_read(conn, buf, http2_frame_size);
+    if (bytes_read != (int)http2_frame_size) {
+      /* TODO: Error Message - or read again? */
+      DEBUG_TRACE("HTTP2 read error (%li != %li)", (signed long int)bytes_read,
+                  (signed long int)http2_frame_size);
+      goto clean_http2;
+    }
 
-		DEBUG_TRACE("HTTP2 frame type %u, size %u, stream %u, flags %02x",
-		            http2_frame_type,
-		            http2_frame_size,
-		            http2_frame_stream_id,
-		            http2_frame_flags);
+    DEBUG_TRACE("HTTP2 frame type %u, size %u, stream %u, flags %02x",
+                http2_frame_type, http2_frame_size, http2_frame_stream_id,
+                http2_frame_flags);
 
-		/* Further processing according to frame type. See definition: */
-		/* https://tools.ietf.org/html/rfc7540#section-6 */
-		switch (http2_frame_type) {
+    /* Further processing according to frame type. See definition: */
+    /* https://tools.ietf.org/html/rfc7540#section-6 */
+    switch (http2_frame_type) {
+      case 0: /* DATA */
+      {
+        /* TODO */
+        DEBUG_TRACE("%s", "HTTP2 DATA frame?");
+      } break;
 
-		case 0: /* DATA */
-		{
-			/* TODO */
-			DEBUG_TRACE("%s", "HTTP2 DATA frame?");
-		} break;
+      case 1: /* HEADERS */
+      {
+        int i = 0;
+        uint8_t padding = 0;
+        uint32_t dependency = 0;
+        uint8_t weight = 0;
+        uint8_t exclusive = 0;
 
-		case 1: /* HEADERS */
-		{
-			int i = 0;
-			uint8_t padding = 0;
-			uint32_t dependency = 0;
-			uint8_t weight = 0;
-			uint8_t exclusive = 0;
+        /* Request start time */
+        clock_gettime(CLOCK_MONOTONIC, &(conn->req_time));
 
-			/* Request start time */
-			clock_gettime(CLOCK_MONOTONIC, &(conn->req_time));
+        if (frame_is_padded) {
+          padding = buf[i];
+          i++;
+          DEBUG_TRACE("HTTP2 frame padded by %u bytes", padding);
+        }
+        if (frame_is_priority) {
+          uint32_t val = ((uint32_t)buf[0 + i] * 0x1000000u) +
+                         ((uint32_t)buf[1 + i] * 0x10000u) +
+                         ((uint32_t)buf[2 + i] * 0x100u) +
+                         ((uint32_t)buf[3 + i]);
+          dependency = (val & 0x7FFFFFFFu);
+          exclusive = ((val & 0x80000000u) != 0);
+          weight = buf[4 + i];
+          i += 5;
+          DEBUG_TRACE("HTTP2 frame weight %u, dependency %u (exclusive: %i)",
+                      weight, dependency, exclusive);
+        }
 
-			if (frame_is_padded) {
-				padding = buf[i];
-				i++;
-				DEBUG_TRACE("HTTP2 frame padded by %u bytes", padding);
-			}
-			if (frame_is_priority) {
-				uint32_t val = ((uint32_t)buf[0 + i] * 0x1000000u)
-				               + ((uint32_t)buf[1 + i] * 0x10000u)
-				               + ((uint32_t)buf[2 + i] * 0x100u)
-				               + ((uint32_t)buf[3 + i]);
-				dependency = (val & 0x7FFFFFFFu);
-				exclusive = ((val & 0x80000000u) != 0);
-				weight = buf[4 + i];
-				i += 5;
-				DEBUG_TRACE(
-				    "HTTP2 frame weight %u, dependency %u (exclusive: %i)",
-				    weight,
-				    dependency,
-				    exclusive);
-			}
+        conn->request_info.num_headers = 0;
 
-			conn->request_info.num_headers = 0;
+        while (i < (int)http2_frame_size - (int)padding) {
+          const char* key = 0;
+          const char* val = 0;
+          uint8_t idx_mask = 0;
+          uint8_t value_known = 0;
+          uint8_t indexing = 0;
+          uint64_t idx = 0;
 
-			while (i < (int)http2_frame_size - (int)padding) {
-				const char *key = 0;
-				const char *val = 0;
-				uint8_t idx_mask = 0;
-				uint8_t value_known = 0;
-				uint8_t indexing = 0;
-				uint64_t idx = 0;
+          /* Classify next entry by checking the bit mask */
+          if ((buf[i] & 0x80u) == 0x80u) {
+            /* Indexed Header Field Representation:
+             * https://tools.ietf.org/html/rfc7541#section-6.1 */
+            idx_mask = 0x7fu;
+            value_known = 1;
 
-				/* Classify next entry by checking the bit mask */
-				if ((buf[i] & 0x80u) == 0x80u) {
-					/* Indexed Header Field Representation:
-					 * https://tools.ietf.org/html/rfc7541#section-6.1 */
-					idx_mask = 0x7fu;
-					value_known = 1;
+          } else if ((buf[i] & 0xC0u) == 0x40u) {
+            /* Literal Header Field with Incremental Indexing:
+             * https://tools.ietf.org/html/rfc7541#section-6.2.1 */
+            idx_mask = 0x3fu;
+            indexing = 1;
 
-				} else if ((buf[i] & 0xC0u) == 0x40u) {
-					/* Literal Header Field with Incremental Indexing:
-					 * https://tools.ietf.org/html/rfc7541#section-6.2.1 */
-					idx_mask = 0x3fu;
-					indexing = 1;
+          } else if ((buf[i] & 0xF0u) == 0x00u) {
+            /* Literal Header Field without Indexing:
+             * https://tools.ietf.org/html/rfc7541#section-6.2.2 */
+            idx_mask = 0x0fu;
 
-				} else if ((buf[i] & 0xF0u) == 0x00u) {
-					/* Literal Header Field without Indexing:
-					 * https://tools.ietf.org/html/rfc7541#section-6.2.2 */
-					idx_mask = 0x0fu;
+          } else if ((buf[i] & 0xF0u) == 0x10u) {
+            /* Literal Header Field Never Indexed:
+             * https://tools.ietf.org/html/rfc7541#section-6.2.3 */
+            idx_mask = 0x0fu;
 
-				} else if ((buf[i] & 0xF0u) == 0x10u) {
-					/* Literal Header Field Never Indexed:
-					 * https://tools.ietf.org/html/rfc7541#section-6.2.3 */
-					idx_mask = 0x0fu;
+          } else if ((buf[i] & 0xE0u) == 0x20u) {
+            uint64_t tableSize;
+            /* Dynamic Table Size Update:
+             * https://tools.ietf.org/html/rfc7541#section-6.3 */
+            idx_mask = 0x1fu;
+            tableSize = hpack_getnum(buf, &i, idx_mask, conn->phys_ctx);
 
-				} else if ((buf[i] & 0xE0u) == 0x20u) {
-					uint64_t tableSize;
-					/* Dynamic Table Size Update:
-					 * https://tools.ietf.org/html/rfc7541#section-6.3 */
-					idx_mask = 0x1fu;
-					tableSize = hpack_getnum(buf, &i, idx_mask, conn->phys_ctx);
+            /* TODO: check if tablesize > allowed table size */
 
-					/* TODO: check if tablesize > allowed table size */
+            /* Purge additional table entries */
+            purge_dynamic_header_table(conn, (uint32_t)tableSize);
 
-					/* Purge additional table entries */
-					purge_dynamic_header_table(conn, (uint32_t)tableSize);
+            /* Process next frame */
+            continue;
 
-					/* Process next frame */
-					continue;
+          } else {
+            DEBUG_TRACE("HTTP2 unknown start pattern %02x", buf[i]);
+            goto clean_http2;
+          }
 
-				} else {
-					DEBUG_TRACE("HTTP2 unknown start pattern %02x", buf[i]);
-					goto clean_http2;
-				}
+          /* Get the header name table index */
+          idx = hpack_getnum(buf, &i, idx_mask, conn->phys_ctx);
 
-				/* Get the header name table index */
-				idx = hpack_getnum(buf, &i, idx_mask, conn->phys_ctx);
+          /* Get Header name "key" */
+          if (idx == 0) {
+            /* Index 0: Header name encoded in following bytes */
+            key = hpack_decode(buf, &i, (int)bytes_read, conn->phys_ctx);
+            CHECK_LEAK_HDR_ALLOC(key);
+            if (!key) {
+              DEBUG_TRACE("HTTP2 key decoding error");
+              goto clean_http2;
+            }
+          } else if (/*(idx >= 15) &&*/ (idx <= 61)) {
+            /* Take key name from predefined header table */
+            key = mg_strdup_ctx(hpack_predefined[idx].name,
+                                conn->phys_ctx); /* leak? */
+            CHECK_LEAK_HDR_ALLOC(key);
+          } else if ((idx >= 62) &&
+                     ((idx - 61) <= conn->http2.dyn_table_size)) {
+            /* Take from dynamic header table */
+            uint32_t local_table_idx = (uint32_t)idx - 62;
+            key = mg_strdup_ctx(conn->http2.dyn_table[local_table_idx].name,
+                                conn->phys_ctx);
+            CHECK_LEAK_HDR_ALLOC(key);
+          } else {
+            /* protocol violation */
+            DEBUG_TRACE("HTTP2 invalid index %lu", (unsigned long)idx);
+            goto clean_http2;
+          }
+          /* key is allocated now and must be freed later */
 
-				/* Get Header name "key" */
-				if (idx == 0) {
-					/* Index 0: Header name encoded in following bytes */
-					key =
-					    hpack_decode(buf, &i, (int)bytes_read, conn->phys_ctx);
-					CHECK_LEAK_HDR_ALLOC(key);
-					if (!key) {
-						DEBUG_TRACE("HTTP2 key decoding error");
-						goto clean_http2;
-					}
-				} else if (/*(idx >= 15) &&*/ (idx <= 61)) {
-					/* Take key name from predefined header table */
-					key = mg_strdup_ctx(hpack_predefined[idx].name,
-					                    conn->phys_ctx); /* leak? */
-					CHECK_LEAK_HDR_ALLOC(key);
-				} else if ((idx >= 62)
-				           && ((idx - 61) <= conn->http2.dyn_table_size)) {
-					/* Take from dynamic header table */
-					uint32_t local_table_idx = (uint32_t)idx - 62;
-					key = mg_strdup_ctx(
-					    conn->http2.dyn_table[local_table_idx].name,
-					    conn->phys_ctx);
-					CHECK_LEAK_HDR_ALLOC(key);
-				} else {
-					/* protocol violation */
-					DEBUG_TRACE("HTTP2 invalid index %lu", (unsigned long)idx);
-					goto clean_http2;
-				}
-				/* key is allocated now and must be freed later */
+          /* Get header value */
+          if (value_known) {
+            /* Server must already know the value */
+            if (idx <= 61) {
+              if (hpack_predefined[idx].value) {
+                val = mg_strdup_ctx(hpack_predefined[idx].value,
+                                    conn->phys_ctx); /* leak? */
+                CHECK_LEAK_HDR_ALLOC(val);
+              } else {
+                /* protocol violation */
+                DEBUG_TRACE(
+                    "HTTP2 indexed header %lu has no value "
+                    "(key: %s)",
+                    (unsigned long)idx, key);
+                CHECK_LEAK_HDR_FREE(key);
+                mg_free((void*)key);
+                goto clean_http2;
+              }
+            } else if ((idx >= 62) &&
+                       ((idx - 61) <= conn->http2.dyn_table_size)) {
+              uint32_t local_table_idx = (uint32_t)idx - 62;
+              val = mg_strdup_ctx(conn->http2.dyn_table[local_table_idx].value,
+                                  conn->phys_ctx);
+              CHECK_LEAK_HDR_ALLOC(val);
+            } else {
+              /* protocol violation */
+              DEBUG_TRACE("HTTP2 indexed header %lu out of range (key: %s)",
+                          (unsigned long)idx, key);
+              CHECK_LEAK_HDR_FREE(key);
+              mg_free((void*)key);
+              goto clean_http2;
+            }
 
-				/* Get header value */
-				if (value_known) {
-					/* Server must already know the value */
-					if (idx <= 61) {
-						if (hpack_predefined[idx].value) {
-							val = mg_strdup_ctx(hpack_predefined[idx].value,
-							                    conn->phys_ctx); /* leak? */
-							CHECK_LEAK_HDR_ALLOC(val);
-						} else {
-							/* protocol violation */
-							DEBUG_TRACE("HTTP2 indexed header %lu has no value "
-							            "(key: %s)",
-							            (unsigned long)idx,
-							            key);
-							CHECK_LEAK_HDR_FREE(key);
-							mg_free((void *)key);
-							goto clean_http2;
-						}
-					} else if ((idx >= 62)
-					           && ((idx - 61) <= conn->http2.dyn_table_size)) {
-						uint32_t local_table_idx = (uint32_t)idx - 62;
-						val = mg_strdup_ctx(
-						    conn->http2.dyn_table[local_table_idx].value,
-						    conn->phys_ctx);
-						CHECK_LEAK_HDR_ALLOC(val);
-					} else {
-						/* protocol violation */
-						DEBUG_TRACE(
-						    "HTTP2 indexed header %lu out of range (key: %s)",
-						    (unsigned long)idx,
-						    key);
-						CHECK_LEAK_HDR_FREE(key);
-						mg_free((void *)key);
-						goto clean_http2;
-					}
+          } else {
+            /* Read value from HTTP2 stream */
+            val = hpack_decode(buf, &i, (int)bytes_read,
+                               conn->phys_ctx); /* leak? */
+            CHECK_LEAK_HDR_ALLOC(val);
+            if (!val) {
+              DEBUG_TRACE("HTTP2 value decoding error");
+              mg_free((void*)key);
+              goto clean_http2;
+            }
 
-				} else {
-					/* Read value from HTTP2 stream */
-					val = hpack_decode(buf,
-					                   &i,
-					                   (int)bytes_read,
-					                   conn->phys_ctx); /* leak? */
-					CHECK_LEAK_HDR_ALLOC(val);
-					if (!val) {
-						DEBUG_TRACE("HTTP2 value decoding error");
-						mg_free((void *)key);
-						goto clean_http2;
-					}
+            if (indexing) {
+              /* Add to index */
+              if (conn->http2.dyn_table_size >= HTTP2_DYN_TABLE_SIZE) {
+                /* Too many elements */
+                DEBUG_TRACE(
+                    "HTTP2 index table is full (key: %s, "
+                    "value: %s)",
+                    key, val);
 
-					if (indexing) {
-						/* Add to index */
-						if (conn->http2.dyn_table_size
-						    >= HTTP2_DYN_TABLE_SIZE) {
-							/* Too many elements */
-							DEBUG_TRACE("HTTP2 index table is full (key: %s, "
-							            "value: %s)",
-							            key,
-							            val);
+                CHECK_LEAK_HDR_FREE(key);
+                CHECK_LEAK_HDR_FREE(val);
 
-							CHECK_LEAK_HDR_FREE(key);
-							CHECK_LEAK_HDR_FREE(val);
+                mg_free((void*)key);
+                mg_free((void*)val);
+                goto clean_http2;
+              }
 
-							mg_free((void *)key);
-							mg_free((void *)val);
-							goto clean_http2;
-						}
+              /* Add to table of dynamic headers */
+              conn->http2.dyn_table[conn->http2.dyn_table_size].name =
+                  mg_strdup_ctx(key, conn->phys_ctx); /* leak */
+              conn->http2.dyn_table[conn->http2.dyn_table_size].value =
+                  mg_strdup_ctx(val, conn->phys_ctx); /* leak */
 
-						/* Add to table of dynamic headers */
-						conn->http2.dyn_table[conn->http2.dyn_table_size].name =
-						    mg_strdup_ctx(key, conn->phys_ctx); /* leak */
-						conn->http2.dyn_table[conn->http2.dyn_table_size]
-						    .value =
-						    mg_strdup_ctx(val, conn->phys_ctx); /* leak */
+              CHECK_LEAK_DYN_ALLOC(
+                  conn->http2.dyn_table[conn->http2.dyn_table_size].name);
+              CHECK_LEAK_DYN_ALLOC(
+                  conn->http2.dyn_table[conn->http2.dyn_table_size].value);
 
-						CHECK_LEAK_DYN_ALLOC(
-						    conn->http2.dyn_table[conn->http2.dyn_table_size]
-						        .name);
-						CHECK_LEAK_DYN_ALLOC(
-						    conn->http2.dyn_table[conn->http2.dyn_table_size]
-						        .value);
+              conn->http2.dyn_table_size++;
 
-						conn->http2.dyn_table_size++;
+              DEBUG_TRACE(
+                  "HTTP2 new dynamic header table entry %i "
+                  "(key: %s, value: %s)",
+                  (int)conn->http2.dyn_table_size, key, val);
+            }
+          }
+          /* val and key are allocated now and must be freed later */
+          /* Store these pointers in conn->request_info[].http_headers,
+           * free_buffered_header_list(conn) will clean up later. */
 
-						DEBUG_TRACE("HTTP2 new dynamic header table entry %i "
-						            "(key: %s, value: %s)",
-						            (int)conn->http2.dyn_table_size,
-						            key,
-						            val);
-					}
-				}
-				/* val and key are allocated now and must be freed later */
-				/* Store these pointers in conn->request_info[].http_headers,
-				 * free_buffered_header_list(conn) will clean up later. */
+          /* Add header for this request */
+          if ((key != NULL) && (val != NULL) &&
+              (conn->request_info.num_headers < MG_MAX_HEADERS)) {
+            conn->request_info.http_headers[conn->request_info.num_headers]
+                .name = key;
+            conn->request_info.http_headers[conn->request_info.num_headers]
+                .value = val;
+            conn->request_info.num_headers++;
 
-				/* Add header for this request */
-				if ((key != NULL) && (val != NULL)
-				    && (conn->request_info.num_headers < MG_MAX_HEADERS)) {
-					conn->request_info
-					    .http_headers[conn->request_info.num_headers]
-					    .name = key;
-					conn->request_info
-					    .http_headers[conn->request_info.num_headers]
-					    .value = val;
-					conn->request_info.num_headers++;
+            /* Some headers need to be stored in the request structure
+             */
+            if (!strcmp(":method", key)) {
+              conn->request_info.request_method = val;
+            } else if (!strcmp(":path", key)) {
+              conn->request_info.local_uri = val;
+              conn->request_info.request_uri = val;
+              conn->request_info.local_uri_raw = val;
+            } else if (!strcmp(":status", key)) {
+              conn->status_code = atoi(val);
+            }
 
-					/* Some headers need to be stored in the request structure
-					 */
-					if (!strcmp(":method", key)) {
-						conn->request_info.request_method = val;
-					} else if (!strcmp(":path", key)) {
-						conn->request_info.local_uri = val;
-						conn->request_info.request_uri = val;
-						conn->request_info.local_uri_raw = val;
-					} else if (!strcmp(":status", key)) {
-						conn->status_code = atoi(val);
-					}
+            DEBUG_TRACE("HTTP2 request header (key: %s, value: %s)", key, val);
 
-					DEBUG_TRACE("HTTP2 request header (key: %s, value: %s)",
-					            key,
-					            val);
+          } else {
+            /* - either key or value are NULL (out of memory)
+             * - or the max. number of headers is reached
+             * in both cases free all memory
+             */
+            DEBUG_TRACE("%s", "HTTP2 cannot add header");
+            CHECK_LEAK_HDR_FREE(key);
+            CHECK_LEAK_HDR_FREE(val);
 
-				} else {
-					/* - either key or value are NULL (out of memory)
-					 * - or the max. number of headers is reached
-					 * in both cases free all memory
-					 */
-					DEBUG_TRACE("%s", "HTTP2 cannot add header");
-					CHECK_LEAK_HDR_FREE(key);
-					CHECK_LEAK_HDR_FREE(val);
+            mg_free((void*)key);
+            key = NULL;
+            mg_free((void*)val);
+            val = NULL;
+          }
+        }
 
-					mg_free((void *)key);
-					key = NULL;
-					mg_free((void *)val);
-					val = NULL;
-				}
-			}
+        /* stream id */
+        conn->http2.stream_id = http2_frame_stream_id;
 
-			/* stream id */
-			conn->http2.stream_id = http2_frame_stream_id;
+        /* header parsed */
+        DEBUG_TRACE("HTTP2 handle_request (stream %u)", http2_frame_stream_id);
+        handle_request_stat_log(conn);
 
-			/* header parsed */
-			DEBUG_TRACE("HTTP2 handle_request (stream %u)",
-			            http2_frame_stream_id);
-			handle_request_stat_log(conn);
+        /* Send "final" frame */
+        DEBUG_TRACE("HTTP2 handle_request done (stream %u)",
+                    http2_frame_stream_id);
+        http2_data_frame_head(conn, 0, 1);
+        free_buffered_response_header_list(conn);
+        free_buffered_request_header_list(conn);
+      } break;
 
-			/* Send "final" frame */
-			DEBUG_TRACE("HTTP2 handle_request done (stream %u)",
-			            http2_frame_stream_id);
-			http2_data_frame_head(conn, 0, 1);
-			free_buffered_response_header_list(conn);
-			free_buffered_request_header_list(conn);
-		} break;
+      case 2: /* PRIORITY */
+      {
+        uint32_t dependStream =
+            ((uint32_t)buf[0] * 0x1000000u) + ((uint32_t)buf[1] * 0x10000u) +
+            ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
+        uint8_t weight = buf[4];
+        DEBUG_TRACE("HTTP2 priority %u dependent stream %u", weight,
+                    dependStream);
+      } break;
 
-		case 2: /* PRIORITY */
-		{
-			uint32_t dependStream =
-			    ((uint32_t)buf[0] * 0x1000000u) + ((uint32_t)buf[1] * 0x10000u)
-			    + ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
-			uint8_t weight = buf[4];
-			DEBUG_TRACE("HTTP2 priority %u dependent stream %u",
-			            weight,
-			            dependStream);
-		} break;
+      case 3: /* RST_STREAM */
+      {
+        uint32_t errorId = ((uint32_t)buf[0] * 0x1000000u) +
+                           ((uint32_t)buf[1] * 0x10000u) +
+                           ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
+        DEBUG_TRACE("HTTP2 reset with error %u", errorId);
+      } break;
 
-		case 3: /* RST_STREAM */
-		{
-			uint32_t errorId =
-			    ((uint32_t)buf[0] * 0x1000000u) + ((uint32_t)buf[1] * 0x10000u)
-			    + ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
-			DEBUG_TRACE("HTTP2 reset with error %u", errorId);
-		} break;
+      case 4: /* SETTINGS */
+        if (http2_frame_stream_id != 0) {
+          /* Send protocol error */
+          http2_reset_stream(conn, http2_frame_stream_id,
+                             HTTP2_ERR_PROTOCOL_ERROR);
+          DEBUG_TRACE("%s", "HTTP2 received invalid settings frame");
+        } else if (http2_frame_flags) {
+          /* ACK frame. Do not reply. */
+          my_settings_accepted++;
+          DEBUG_TRACE("%s", "CivetWeb settings confirmed by peer");
+        } else {
+          int i;
+          for (i = 0; i < (int)http2_frame_size; i += 6) {
+            uint16_t id = ((uint16_t)buf[i] * 0x100u) + ((uint16_t)buf[i + 1]);
+            uint32_t val = ((uint32_t)buf[i + 2] * 0x1000000u) +
+                           ((uint32_t)buf[i + 3] * 0x10000u) +
+                           ((uint32_t)buf[i + 4] * 0x100u) +
+                           ((uint32_t)buf[i + 5]);
+            switch (id) {
+              case 1:
+                client_settings.settings_header_table_size = val;
+                DEBUG_TRACE("Received settings header_table_size: %u", val);
+                break;
+              case 2:
+                client_settings.settings_enable_push = (val != 0);
+                DEBUG_TRACE("Received settings enable_push: %u", val);
+                break;
+              case 3:
+                client_settings.settings_max_concurrent_streams = val;
+                DEBUG_TRACE("Received settings max_concurrent_streams: %u",
+                            val);
+                break;
+              case 4:
+                client_settings.settings_initial_window_size = val;
+                DEBUG_TRACE("Received settings initial_window_size: %u", val);
+                break;
+              case 5:
+                client_settings.settings_max_frame_size = val;
+                DEBUG_TRACE("Received settings max_frame_size: %u", val);
+                break;
+              case 6:
+                client_settings.settings_max_header_list_size = val;
+                DEBUG_TRACE("Received settings max_header_list_size: %u", val);
+                break;
+              default:
+                /* Unknown setting. Ignore it. */
+                DEBUG_TRACE("Received unknown settings id=%u: %u", id, val);
+                break;
+            }
+          }
 
-		case 4: /* SETTINGS */
-			if (http2_frame_stream_id != 0) {
-				/* Send protocol error */
-				http2_reset_stream(conn,
-				                   http2_frame_stream_id,
-				                   HTTP2_ERR_PROTOCOL_ERROR);
-				DEBUG_TRACE("%s", "HTTP2 received invalid settings frame");
-			} else if (http2_frame_flags) {
-				/* ACK frame. Do not reply. */
-				my_settings_accepted++;
-				DEBUG_TRACE("%s", "CivetWeb settings confirmed by peer");
-			} else {
-				int i;
-				for (i = 0; i < (int)http2_frame_size; i += 6) {
-					uint16_t id =
-					    ((uint16_t)buf[i] * 0x100u) + ((uint16_t)buf[i + 1]);
-					uint32_t val = ((uint32_t)buf[i + 2] * 0x1000000u)
-					               + ((uint32_t)buf[i + 3] * 0x10000u)
-					               + ((uint32_t)buf[i + 4] * 0x100u)
-					               + ((uint32_t)buf[i + 5]);
-					switch (id) {
-					case 1:
-						client_settings.settings_header_table_size = val;
-						DEBUG_TRACE("Received settings header_table_size: %u",
-						            val);
-						break;
-					case 2:
-						client_settings.settings_enable_push = (val != 0);
-						DEBUG_TRACE("Received settings enable_push: %u", val);
-						break;
-					case 3:
-						client_settings.settings_max_concurrent_streams = val;
-						DEBUG_TRACE(
-						    "Received settings max_concurrent_streams: %u",
-						    val);
-						break;
-					case 4:
-						client_settings.settings_initial_window_size = val;
-						DEBUG_TRACE("Received settings initial_window_size: %u",
-						            val);
-						break;
-					case 5:
-						client_settings.settings_max_frame_size = val;
-						DEBUG_TRACE("Received settings max_frame_size: %u",
-						            val);
-						break;
-					case 6:
-						client_settings.settings_max_header_list_size = val;
-						DEBUG_TRACE(
-						    "Received settings max_header_list_size: %u", val);
-						break;
-					default:
-						/* Unknown setting. Ignore it. */
-						DEBUG_TRACE("Received unknown settings id=%u: %u",
-						            id,
-						            val);
-						break;
-					}
-				}
+          /* Every settings frame must be acknowledged */
+          http2_settings_acknowledge(conn);
+        }
+        break;
 
-				/* Every settings frame must be acknowledged */
-				http2_settings_acknowledge(conn);
-			}
-			break;
+      case 5: /* PUSH_PROMISE */
+        DEBUG_TRACE("%s", "Push promise not supported");
+        break;
 
-		case 5: /* PUSH_PROMISE */
-			DEBUG_TRACE("%s", "Push promise not supported");
-			break;
+      case 6: /* PING */
+        if (http2_frame_flags == 0) {
+          /* Set "reply" flag, and send same data back */
+          DEBUG_TRACE("%s", "Replying to ping");
+          http2_frame_head[4] = 1;
+          mg_xwrite(conn, http2_frame_head, sizeof(http2_frame_head));
+          mg_xwrite(conn, buf, http2_frame_size);
+        }
+        break;
 
-		case 6: /* PING */
-			if (http2_frame_flags == 0) {
-				/* Set "reply" flag, and send same data back */
-				DEBUG_TRACE("%s", "Replying to ping");
-				http2_frame_head[4] = 1;
-				mg_xwrite(conn, http2_frame_head, sizeof(http2_frame_head));
-				mg_xwrite(conn, buf, http2_frame_size);
-			}
-			break;
+      case 7: /* GOAWAY */
+      {
+        uint32_t lastStream = ((uint32_t)buf[0] * 0x1000000u) +
+                              ((uint32_t)buf[1] * 0x10000u) +
+                              ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
+        uint32_t errorId = ((uint32_t)buf[4] * 0x1000000u) +
+                           ((uint32_t)buf[5] * 0x10000u) +
+                           ((uint32_t)buf[6] * 0x100u) + ((uint32_t)buf[7]);
+        ; /* followed by debug data */
+        uint32_t debugDataLen = http2_frame_size - 8;
+        char* debugData = (char*)buf + 8;
 
-		case 7: /* GOAWAY */
-		{
-			uint32_t lastStream =
-			    ((uint32_t)buf[0] * 0x1000000u) + ((uint32_t)buf[1] * 0x10000u)
-			    + ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
-			uint32_t errorId =
-			    ((uint32_t)buf[4] * 0x1000000u) + ((uint32_t)buf[5] * 0x10000u)
-			    + ((uint32_t)buf[6] * 0x100u) + ((uint32_t)buf[7]);
-			; /* followed by debug data */
-			uint32_t debugDataLen = http2_frame_size - 8;
-			char *debugData = (char *)buf + 8;
+        DEBUG_TRACE("HTTP2 goaway stream %u, error %u (%.*s)", lastStream,
+                    errorId, debugDataLen, debugData);
 
-			DEBUG_TRACE("HTTP2 goaway stream %u, error %u (%.*s)",
-			            lastStream,
-			            errorId,
-			            debugDataLen,
-			            debugData);
+      } break;
 
-		} break;
+      case 8: /* WINDOW_UPDATE */
+      {
+        uint32_t val = ((uint32_t)buf[0] * 0x1000000u) +
+                       ((uint32_t)buf[1] * 0x10000u) +
+                       ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
+        http_window_length = (val & 0x7FFFFFFFu);
 
-		case 8: /* WINDOW_UPDATE */
-		{
-			uint32_t val = ((uint32_t)buf[0] * 0x1000000u)
-			               + ((uint32_t)buf[1] * 0x10000u)
-			               + ((uint32_t)buf[2] * 0x100u) + ((uint32_t)buf[3]);
-			http_window_length = (val & 0x7FFFFFFFu);
+        DEBUG_TRACE("HTTP2 window update stream %u, length %u",
+                    http2_frame_stream_id, http_window_length);
+      } break;
 
-			DEBUG_TRACE("HTTP2 window update stream %u, length %u",
-			            http2_frame_stream_id,
-			            http_window_length);
-		} break;
+      case 9: /* CONTINUATION */
+        DEBUG_TRACE("%s", "HTTP2 Continue");
+        break;
 
-		case 9: /* CONTINUATION */
-			DEBUG_TRACE("%s", "HTTP2 Continue");
-			break;
+      default:
+        /* TODO: Error Message */
+        DEBUG_TRACE("%s", "Unknown frame type");
+        goto clean_http2;
+    }
 
-		default:
-			/* TODO: Error Message */
-			DEBUG_TRACE("%s", "Unknown frame type");
-			goto clean_http2;
-		}
-
-		/* not used in the moment */
-		(void)frame_is_end_stream;
-		(void)frame_is_end_headers;
-		(void)client_settings;
-	}
+    /* not used in the moment */
+    (void)frame_is_end_stream;
+    (void)frame_is_end_headers;
+    (void)client_settings;
+  }
 
 clean_http2:
-	DEBUG_TRACE("%s", "HTTP2 free buffer, connection handler finished");
-	mg_free(buf);
+  DEBUG_TRACE("%s", "HTTP2 free buffer, connection handler finished");
+  mg_free(buf);
 }
-
 
 #if 0
 static void
@@ -1861,25 +1738,22 @@ HPACK_TABLE_TEST()
 }
 #endif
 
+static void process_new_http2_connection(struct mg_connection* conn) {
+  if (!is_valid_http2_primer(conn)) {
+    /* Primer does not match expectation from RFC.
+     * See https://tools.ietf.org/html/rfc7540#section-3.5 */
+    DEBUG_TRACE("%s", "No valid HTTP2 primer");
+    mg_send_http_error(conn, 400, "%s", "Invalid HTTP/2 primer");
 
-static void
-process_new_http2_connection(struct mg_connection *conn)
-{
-	if (!is_valid_http2_primer(conn)) {
-		/* Primer does not match expectation from RFC.
-		 * See https://tools.ietf.org/html/rfc7540#section-3.5 */
-		DEBUG_TRACE("%s", "No valid HTTP2 primer");
-		mg_send_http_error(conn, 400, "%s", "Invalid HTTP/2 primer");
+  } else {
+    /* Valid HTTP/2 primer received */
+    DEBUG_TRACE("%s", "Start handling HTTP2");
+    handle_http2(conn);
 
-	} else {
-		/* Valid HTTP/2 primer received */
-		DEBUG_TRACE("%s", "Start handling HTTP2");
-		handle_http2(conn);
-
-		/* Free memory allocated for headers, if not done yet */
-		DEBUG_TRACE("%s", "Free remaining HTTP2 header memory");
-		free_buffered_response_header_list(conn);
-		free_buffered_request_header_list(conn);
-		purge_dynamic_header_table(conn, 0);
-	}
+    /* Free memory allocated for headers, if not done yet */
+    DEBUG_TRACE("%s", "Free remaining HTTP2 header memory");
+    free_buffered_response_header_list(conn);
+    free_buffered_request_header_list(conn);
+    purge_dynamic_header_table(conn, 0);
+  }
 }
