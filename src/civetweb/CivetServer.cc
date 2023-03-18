@@ -4,7 +4,7 @@
  * License http://opensource.org/licenses/mit-license.php MIT License
  */
 
-#include "cyclone/civetweb/civetserver.h"
+#include "cyclone/civetweb/CivetServer.h"
 
 #include <assert.h>
 #include <string.h>

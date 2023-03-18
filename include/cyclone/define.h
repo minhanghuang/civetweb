@@ -6,7 +6,7 @@
 #include <thread>
 #include <unordered_map>
 
-#include "cyclone/civetweb/civetserver.h"
+#include "cyclone/civetweb/CivetServer.h"
 
 namespace cyclone {
 

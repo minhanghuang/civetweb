@@ -359,6 +359,7 @@ include_directories(
 file(GLOB CYCLONE_SRCS
   "src/civetweb/*.c"
   "src/civetweb/*.cc"
+  "src/*.cc"
 )
 
 add_library(${TARGET_NAME} ${LIB_TYPE} ${CYCLONE_SRCS})

@@ -4,7 +4,7 @@
 #include <memory>
 #include <mutex>
 
-#include "cyclone/civetweb/civetserver.h"
+#include "cyclone/civetweb/CivetServer.h"
 #include "cyclone/define.h"
 #include "cyclone/options.h"
 
