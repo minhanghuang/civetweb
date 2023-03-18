@@ -125,7 +125,8 @@ set(cyclone_C_STANDARD auto CACHE STRING
 set_property(CACHE cyclone_C_STANDARD PROPERTY STRINGS auto c11 c99 c89)
 set(cyclone_CXX_STANDARD auto CACHE STRING
   "The C++ standard to use; auto determines the latest supported by the compiler")
-set_property(CACHE cyclone_CXX_STANDARD PROPERTY STRINGS auto c++14 c++11 c++98)
+# set_property(CACHE cyclone_CXX_STANDARD PROPERTY STRINGS auto c++14 c++11 c++98)
+set_property(CACHE cyclone_CXX_STANDARD PROPERTY STRINGS auto c++14)
 
 # Configure the linker
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
@@ -142,12 +143,15 @@ endif()
 # Configure the C compiler
 message(STATUS "Configuring C Compiler")
 if("${cyclone_C_STANDARD}" STREQUAL "auto")
-  add_c_compiler_flag(-std=c11)
-  if(NOT HAVE_C_FLAG_STD_C11)
-    add_c_compiler_flag(-std=c99)
-    if(NOT HAVE_C_FLAG_STD_C99)
-      add_c_compiler_flag(-std=c89)
-    endif()
+  # add_c_compiler_flag(-std=c14)
+  # if(NOT HAVE_C_FLAG_STD_C14)
+    add_c_compiler_flag(-std=c11)
+    if(NOT HAVE_C_FLAG_STD_C11)
+      add_c_compiler_flag(-std=c99)
+      if(NOT HAVE_C_FLAG_STD_C99)
+        add_c_compiler_flag(-std=c89)
+      endif()
+    # endif()
   endif()
 else()
   add_c_compiler_flag(-std=${cyclone_C_STANDARD})
@@ -187,18 +191,18 @@ set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
     FORCE)
 add_c_compiler_flag(--coverage COVERAGE)
 
-# Configure the C++ compiler
-if("${cyclone_CXX_STANDARD}" STREQUAL "auto")
-  add_cxx_compiler_flag(-std=c++14)
-  if(NOT HAVE_CXX_FLAG_STD_CXX14)
-    add_cxx_compiler_flag(-std=c++11)
-    if(NOT HAVE_CXX_FLAG_STD_CXX11)
-      add_cxx_compiler_flag(-std=c++98)
-    endif()
-  endif()
-else()
-  add_cxx_compiler_flag(-std=${cyclone_CXX_STANDARD})
-endif()
+# # Configure the C++ compiler
+# if("${cyclone_CXX_STANDARD}" STREQUAL "auto")
+  # add_cxx_compiler_flag(-std=c++14)
+#   if(NOT HAVE_CXX_FLAG_STD_CXX14)
+#     add_cxx_compiler_flag(-std=c++11)
+#     if(NOT HAVE_CXX_FLAG_STD_CXX11)
+#       add_cxx_compiler_flag(-std=c++98)
+#     endif()
+#   endif()
+# else()
+#   add_cxx_compiler_flag(-std=${cyclone_CXX_STANDARD})
+# endif()
 
 add_cxx_compiler_flag(-Wall)
 add_cxx_compiler_flag(-Wextra)
@@ -350,7 +354,7 @@ if(ZEPHYR)
 endif()
 
 # --------------------------------------------------------------
-#                       build 
+#                       build
 # --------------------------------------------------------------
 set(LIB_TYPE "STATIC")
 if(BUILD_SHARED_LIBS)

@@ -6,6 +6,9 @@
 #include <string>
 #include <thread>
 
+#include "web.h"
+#include "websocket.h"
+
 namespace cyclone {
 
 struct Options {
