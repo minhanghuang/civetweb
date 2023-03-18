@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include "civetweb/civetweb.h"
+#include "civetweb.h"
 
 #ifndef CIVETWEB_CXX_API
 #if defined(_WIN32)
@@ -445,8 +445,6 @@ class CIVETWEB_CXX_API CivetServer {
   static int getCookie(struct mg_connection* conn,
                        const std::string& cookieName, std::string& cookieValue);
 
-  static int setCookie(struct mg_connection* conn,
-                       const std::string& cookieValue);
   /**
    * getHeader(struct mg_connection *conn, const std::string &headerName)
    * @param conn - the connection information

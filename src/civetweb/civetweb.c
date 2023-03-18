@@ -220,7 +220,7 @@ static int zephyr_worker_stack_index;
 #if !defined(CIVETWEB_HEADER_INCLUDED)
 /* Include the header file here, so the CivetWeb interface is defined for the
  * entire implementation, including the following forward definitions. */
-#include "civetweb/civetweb.h"
+#include "cyclone/civetweb/civetweb.h"
 #endif
 
 #if !defined(DEBUG_TRACE)
@@ -1722,7 +1722,7 @@ DEBUG_TRACE_FUNC(const char *func, unsigned line, const char *fmt, ...)
 
 
 #define MD5_STATIC static
-#include "civetweb/md5.inl"
+#include "cyclone/civetweb/md5.inl"
 
 /* Darwin prior to 7.0 and Win32 do not have socklen_t */
 #if defined(NO_SOCKLEN_T)
@@ -1806,7 +1806,7 @@ typedef struct SSL_CTX SSL_CTX;
 /* SSL loaded dynamically from DLL / shared object */
 /* Add all prototypes here, to be independent from OpenSSL source
  * installation. */
-#include "civetweb/openssl_dl.inl"
+#include "cyclone/civetweb/openssl_dl.inl"
 
 #endif /* Various SSL bindings */
 
@@ -3971,10 +3971,10 @@ header_has_option(const char *header, const char *option)
 
 
 /* Sorting function implemented in a separate file */
-#include "civetweb/sort.inl"
+#include "cyclone/civetweb/sort.inl"
 
 /* Pattern matching has been reimplemented in a new file */
-#include "civetweb/match.inl"
+#include "cyclone/civetweb/match.inl"
 
 
 /* HTTP 1.1 assumes keep alive if "Connection:" header is not set
@@ -4049,7 +4049,7 @@ suggest_connection_header(const struct mg_connection *conn)
 }
 
 
-#include "civetweb/response.inl"
+#include "cyclone/civetweb/response.inl"
 
 
 static void
@@ -6595,7 +6595,7 @@ handle_request_stat_log(struct mg_connection *conn)
 #error "HTTP2 requires ALPN, ALPN requires SSL/TLS"
 #endif
 #define USE_ALPN
-#include "civetweb/http2.inl"
+#include "http2.inl"
 /* Not supported with HTTP/2 */
 #define HTTP1_only                                                             \
 	{                                                                          \
@@ -10202,7 +10202,7 @@ fclose_on_exec(struct mg_file_access *filep, struct mg_connection *conn)
 
 
 #if defined(USE_ZLIB)
-#include "civetweb/mod_zlib.inl"
+#include "mod_zlib.inl"
 #endif
 
 
@@ -11236,7 +11236,7 @@ forward_body_data(struct mg_connection *conn, FILE *fp, SOCKET sock, SSL *ssl)
 #if defined(USE_TIMERS)
 
 #define TIMER_API static
-#include "civetweb/timer.inl"
+#include "timer.inl"
 
 #endif /* USE_TIMERS */
 
@@ -13024,11 +13024,11 @@ mg_unlock_context(struct mg_context *ctx)
 
 
 #if defined(USE_LUA)
-#include "civetweb/mod_lua.inl"
+#include "mod_lua.inl"
 #endif /* USE_LUA */
 
 #if defined(USE_DUKTAPE)
-#include "civetweb/mod_duktape.inl"
+#include "mod_duktape.inl"
 #endif /* USE_DUKTAPE */
 
 #if defined(USE_WEBSOCKET)
@@ -13036,7 +13036,7 @@ mg_unlock_context(struct mg_context *ctx)
 #if !defined(NO_SSL_DL)
 #if !defined(OPENSSL_API_3_0)
 #define SHA_API static
-#include "civetweb/sha1.inl"
+#include "cyclone/civetweb/sha1.inl"
 #endif
 #endif
 
@@ -14105,7 +14105,7 @@ set_throttle(const char *spec, const union usa *rsa, const char *uri)
 
 
 /* The mg_upload function is superseded by mg_handle_form_request. */
-#include "civetweb/handle_form.inl"
+#include "cyclone/civetweb/handle_form.inl"
 
 
 static int
@@ -16047,7 +16047,7 @@ header_val(const struct mg_connection *conn, const char *header)
 
 
 #if defined(MG_EXTERNAL_FUNCTION_log_access)
-#include "civetweb/external_log_access.inl"
+#include "external_log_access.inl"
 #elif !defined(NO_FILESYSTEMS)
 
 static void

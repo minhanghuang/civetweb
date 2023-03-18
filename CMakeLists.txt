@@ -1,18 +1,13 @@
 cmake_minimum_required (VERSION 3.3.0)
-
-project(cyclone VERSION 2.3.10)
-
 cmake_policy(VERSION 3.2.2)
 cmake_policy(SET CMP0054 NEW)
+
+project(cyclone VERSION 1.0.0)
 
 set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
-
-option(BUILD_EXAMPLE "BUILD EXAMPLES" OFF)
 option(BUILD_SHARED_LIBS "BUILD SHARED LIBS" ON)
 
 if(NOT MACOSX AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -125,8 +120,7 @@ set(cyclone_C_STANDARD auto CACHE STRING
 set_property(CACHE cyclone_C_STANDARD PROPERTY STRINGS auto c11 c99 c89)
 set(cyclone_CXX_STANDARD auto CACHE STRING
   "The C++ standard to use; auto determines the latest supported by the compiler")
-# set_property(CACHE cyclone_CXX_STANDARD PROPERTY STRINGS auto c++14 c++11 c++98)
-set_property(CACHE cyclone_CXX_STANDARD PROPERTY STRINGS auto c++14)
+set_property(CACHE cyclone_CXX_STANDARD PROPERTY STRINGS auto c++14 c++11 c++98)
 
 # Configure the linker
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
@@ -143,15 +137,12 @@ endif()
 # Configure the C compiler
 message(STATUS "Configuring C Compiler")
 if("${cyclone_C_STANDARD}" STREQUAL "auto")
-  # add_c_compiler_flag(-std=c14)
-  # if(NOT HAVE_C_FLAG_STD_C14)
-    add_c_compiler_flag(-std=c11)
-    if(NOT HAVE_C_FLAG_STD_C11)
-      add_c_compiler_flag(-std=c99)
-      if(NOT HAVE_C_FLAG_STD_C99)
-        add_c_compiler_flag(-std=c89)
-      endif()
-    # endif()
+  add_c_compiler_flag(-std=c11)
+  if(NOT HAVE_C_FLAG_STD_C11)
+    add_c_compiler_flag(-std=c99)
+    if(NOT HAVE_C_FLAG_STD_C99)
+      add_c_compiler_flag(-std=c89)
+    endif()
   endif()
 else()
   add_c_compiler_flag(-std=${cyclone_C_STANDARD})
@@ -191,18 +182,18 @@ set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
     FORCE)
 add_c_compiler_flag(--coverage COVERAGE)
 
-# # Configure the C++ compiler
-# if("${cyclone_CXX_STANDARD}" STREQUAL "auto")
-  # add_cxx_compiler_flag(-std=c++14)
-#   if(NOT HAVE_CXX_FLAG_STD_CXX14)
-#     add_cxx_compiler_flag(-std=c++11)
-#     if(NOT HAVE_CXX_FLAG_STD_CXX11)
-#       add_cxx_compiler_flag(-std=c++98)
-#     endif()
-#   endif()
-# else()
-#   add_cxx_compiler_flag(-std=${cyclone_CXX_STANDARD})
-# endif()
+# Configure the C++ compiler
+if("${cyclone_CXX_STANDARD}" STREQUAL "auto")
+  add_cxx_compiler_flag(-std=c++14)
+  if(NOT HAVE_CXX_FLAG_STD_CXX14)
+    add_cxx_compiler_flag(-std=c++11)
+    if(NOT HAVE_CXX_FLAG_STD_CXX11)
+      add_cxx_compiler_flag(-std=c++98)
+    endif()
+  endif()
+else()
+  add_cxx_compiler_flag(-std=${cyclone_CXX_STANDARD})
+endif()
 
 add_cxx_compiler_flag(-Wall)
 add_cxx_compiler_flag(-Wextra)
@@ -366,7 +357,6 @@ include_directories(
 )
 
 file(GLOB CYCLONE_SRCS
-  "src/*.cc"
   "src/civetweb/*.c"
   "src/civetweb/*.cc"
 )
@@ -417,7 +407,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 install(
-  TARGETS ${TARGET_NAME} 
+  TARGETS ${TARGET_NAME}
   EXPORT ${TARGET_NAME}-targets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -426,17 +416,16 @@ install(
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(DIRECTORY include/
-    DESTINATION include/cyclone
+install(DIRECTORY include
+    DESTINATION include
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*.hpp"
     PATTERN "*.inl"
 )
 
-if(BUILD_EXAMPLE)
-  add_subdirectory(example)
-endif(BUILD_EXAMPLE)
+include(CTest)
+include(CMakePackageConfigHelpers)
 
 install(
   EXPORT ${TARGET_NAME}-targets
@@ -451,7 +440,7 @@ configure_package_config_file(
   ${PROJECT_NAME}-config.cmake
   INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME}"
   NO_CHECK_REQUIRED_COMPONENTS_MACRO
-  PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR TARGET_NAME
+  PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
 )
 
 configure_file(
