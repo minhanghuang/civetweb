@@ -357,13 +357,18 @@ if(BUILD_SHARED_LIBS)
   set(LIB_TYPE "SHARED")
 endif()
 
-include_directories(include)
-
-add_library(${TARGET_NAME} ${LIB_TYPE}
-  src/civetweb.c
-  src/CivetServer.cpp
-  src/cyclone.cc
+include_directories(
+  include
 )
+
+file(GLOB CYCLONE_SRCS
+  "src/*.cc"
+  "src/civetweb/*.c"
+  "src/civetweb/*.cc"
+)
+
+add_library(${TARGET_NAME} ${LIB_TYPE} ${CYCLONE_SRCS})
+
 find_package(WinSock)
 if(WINSOCK_FOUND)
   target_link_libraries(${TARGET_NAME} WINSOCK::WINSOCK)
@@ -417,7 +422,7 @@ install(
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(DIRECTORY src/
+install(DIRECTORY include/
     DESTINATION include/cyclone
     FILES_MATCHING
     PATTERN "*.h"
@@ -452,7 +457,7 @@ configure_file(
 )
 
 install(
-  FILES 
+  FILES
     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.pc"
     DESTINATION "${CMAKE_INSTALL_DATADIR}/pkgconfig"
 )

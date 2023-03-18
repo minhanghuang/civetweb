@@ -4,11 +4,13 @@
  * License http://opensource.org/licenses/mit-license.php MIT License
  */
 
-#include "CivetServer.h"
+#include "civetweb/CivetServer.h"
+// #include "civetweb/CivetServer.h"
 
 #include <assert.h>
 #include <string.h>
 
+#include <iostream>
 #include <stdexcept>
 
 #ifndef UNUSED_PARAMETER
@@ -342,24 +344,11 @@ CivetServer::CivetServer(const char** options,
     userCloseHandler = NULL;
   }
   callbacks.connection_close = closeHandler;
-  struct mg_init_data mg_start_init_data = {0};
-  mg_start_init_data.callbacks = &callbacks;
-  mg_start_init_data.user_data = this;
-  mg_start_init_data.configuration_options = options;
-
-  struct mg_error_data mg_start_error_data = {0};
-  char errtxtbuf[256] = {0};
-  mg_start_error_data.text = errtxtbuf;
-  mg_start_error_data.text_buffer_size = sizeof(errtxtbuf);
-
-  context = mg_start2(&mg_start_init_data, &mg_start_error_data);
-
+  context = mg_start(&callbacks, this, options);
   if (context == NULL) {
-    std::string exceptionMsg =
+    throw CivetException(
         "null context when constructing CivetServer. "
-        "Possible problem binding to port. Error: ";
-    exceptionMsg += errtxtbuf;
-    throw CivetException(exceptionMsg);
+        "Possible problem binding to port.");
   }
 }
 
@@ -385,25 +374,11 @@ CivetServer::CivetServer(const std::vector<std::string>& options,
   }
   pointers.back() = NULL;
 
-  struct mg_init_data mg_start_init_data = {0};
-  mg_start_init_data.callbacks = &callbacks;
-  mg_start_init_data.user_data = this;
-  mg_start_init_data.configuration_options = &pointers[0];
-
-  struct mg_error_data mg_start_error_data = {0};
-  char errtxtbuf[256] = {0};
-  mg_start_error_data.text = errtxtbuf;
-  mg_start_error_data.text_buffer_size = sizeof(errtxtbuf);
-
-  context = mg_start2(&mg_start_init_data, &mg_start_error_data);
-
-  if (context == NULL) {
-    std::string exceptionMsg =
+  context = mg_start(&callbacks, this, &pointers[0]);
+  if (context == NULL)
+    throw CivetException(
         "null context when constructing CivetServer. "
-        "Possible problem binding to port. Error: ";
-    exceptionMsg += errtxtbuf;
-    throw CivetException(exceptionMsg);
-  }
+        "Possible problem binding to port.");
 }
 
 CivetServer::~CivetServer() { close(); }
@@ -424,11 +399,17 @@ void CivetServer::closeHandler(const struct mg_connection* conn) {
 }
 
 void CivetServer::addHandler(const std::string& uri, CivetHandler* handler) {
+  if (uri.empty()) {
+    return;
+  }
   mg_set_request_handler(context, uri.c_str(), requestHandler, handler);
 }
 
 void CivetServer::addWebSocketHandler(const std::string& uri,
                                       CivetWebSocketHandler* handler) {
+  if (uri.empty()) {
+    return;
+  }
   mg_set_websocket_handler(context, uri.c_str(), webSocketConnectionHandler,
                            webSocketReadyHandler, webSocketDataHandler,
                            webSocketCloseHandler, handler);
@@ -436,18 +417,30 @@ void CivetServer::addWebSocketHandler(const std::string& uri,
 
 void CivetServer::addAuthHandler(const std::string& uri,
                                  CivetAuthHandler* handler) {
+  if (uri.empty()) {
+    return;
+  }
   mg_set_auth_handler(context, uri.c_str(), authHandler, handler);
 }
 
 void CivetServer::removeHandler(const std::string& uri) {
+  if (uri.empty()) {
+    return;
+  }
   mg_set_request_handler(context, uri.c_str(), NULL, NULL);
 }
 
 void CivetServer::removeWebSocketHandler(const std::string& uri) {
+  if (uri.empty()) {
+    return;
+  }
   mg_set_websocket_handler(context, uri.c_str(), NULL, NULL, NULL, NULL, NULL);
 }
 
 void CivetServer::removeAuthHandler(const std::string& uri) {
+  if (uri.empty()) {
+    return;
+  }
   mg_set_auth_handler(context, uri.c_str(), NULL, NULL);
 }
 
@@ -463,19 +456,34 @@ int CivetServer::getCookie(struct mg_connection* conn,
                            std::string& cookieValue) {
   // Maximum cookie length as per microsoft is 4096.
   // http://msdn.microsoft.com/en-us/library/ms178194.aspx
+  if (cookieName.empty()) {
+    return -2;
+  }
   char _cookieValue[4096];
   const char* cookie = mg_get_header(conn, "Cookie");
   int lRead = mg_get_cookie(cookie, cookieName.c_str(), _cookieValue,
                             sizeof(_cookieValue));
   cookieValue.clear();
-  if (lRead >= 0) {
-    cookieValue.append(_cookieValue);
+  cookieValue.append(_cookieValue);
+  return lRead;
+}
+
+int CivetServer::setCookie(struct mg_connection* conn,
+                           const std::string& cookieValue) {
+  if (cookieValue.empty()) {
+    return -2;
   }
+  mg_response_header_start(conn, 200);
+  int lRead =
+      mg_response_header_add(conn, "Set-Cookie", cookieValue.c_str(), -1);
   return lRead;
 }
 
 const char* CivetServer::getHeader(struct mg_connection* conn,
                                    const std::string& headerName) {
+  if (headerName.empty()) {
+    return "";
+  }
   return mg_get_header(conn, headerName.c_str());
 }
 
@@ -487,12 +495,18 @@ const char* CivetServer::getMethod(struct mg_connection* conn) {
 
 void CivetServer::urlDecode(const char* src, std::string& dst,
                             bool is_form_url_encoded) {
+  if (src[0] == '\0') {
+    return;
+  }
   urlDecode(src, strlen(src), dst, is_form_url_encoded);
 }
 
 void CivetServer::urlDecode(const char* src, size_t src_len, std::string& dst,
                             bool is_form_url_encoded) {
   // assign enough buffer
+  if (src[0] == '\0') {
+    return;
+  }
   std::vector<char> buf(src_len + 1);
   int r = mg_url_decode(src, static_cast<int>(src_len), &buf[0],
                         static_cast<int>(buf.size()), is_form_url_encoded);
@@ -506,6 +520,9 @@ void CivetServer::urlDecode(const char* src, size_t src_len, std::string& dst,
 
 bool CivetServer::getParam(struct mg_connection* conn, const char* name,
                            std::string& dst, size_t occurrence) {
+  if (name[0] == '\0') {
+    return false;
+  }
   const char* formParams = NULL;
   const char* queryString = NULL;
   const struct mg_request_info* ri = mg_get_request_info(conn);
@@ -566,6 +583,9 @@ bool CivetServer::getParam(struct mg_connection* conn, const char* name,
 
 bool CivetServer::getParam(const char* data, size_t data_len, const char* name,
                            std::string& dst, size_t occurrence) {
+  if (name[0] == '\0') {
+    return false;
+  }
   char buf[256];
   int r = mg_get_var2(data, data_len, name, buf, sizeof(buf), occurrence);
   if (r >= 0) {
@@ -605,11 +625,18 @@ std::string CivetServer::getPostData(struct mg_connection* conn) {
 }
 
 void CivetServer::urlEncode(const char* src, std::string& dst, bool append) {
+  if (src[0] == '\0') {
+    return;
+  }
   urlEncode(src, strlen(src), dst, append);
 }
 
 void CivetServer::urlEncode(const char* src, size_t src_len, std::string& dst,
                             bool append) {
+  if (src[0] == '\0') {
+    return;
+  }
+
   if (!append) dst.clear();
 
   for (; src_len > 0; src++, src_len--) {

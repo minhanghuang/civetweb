@@ -1806,7 +1806,7 @@ struct mg_init_data {
 
 CIVETWEB_API struct mg_connection *
 mg_connect_client2(const char *host,
-                   const char *protocol,
+         const char *protocol,
                    int port,
                    const char *path,
                    struct mg_init_data *init,
