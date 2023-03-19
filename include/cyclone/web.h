@@ -10,6 +10,7 @@
 #include "cyclone/civetweb/CivetServer.h"
 #include "cyclone/define.h"
 #include "cyclone/options.h"
+#include "cyclone/websocket.h"
 
 namespace cyclone {
 namespace web {
@@ -68,6 +69,8 @@ class Application {
   void Stop();
   int AddHandler(const URL& url, RequestHandler::Ptr handler);
   int AddHandler(const URL& url, RequestHandler* handler);
+  int AddHandler(const URL& url, websocket::WebSocketHandler::Ptr handler);
+  int AddHandler(const URL& url, websocket::WebSocketHandler* handler);
   void Get(const URL& url, Callback callback);
   void Post(const URL& url, Callback callback);
   void Put(const URL& url, Callback callback);
@@ -82,6 +85,7 @@ class Application {
   std::mutex handlers_mutex_;
   std::vector<std::string> options_;
   std::map<std::string, RequestHandler::Ptr> handlers_;
+  std::map<std::string, websocket::WebSocketHandler::Ptr> ws_handlers_;
   std::shared_ptr<Server> server_;
 };
 

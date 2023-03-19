@@ -237,6 +237,28 @@ int Application::AddHandler(const URL& url, RequestHandler* handler) {
   return 0;
 }
 
+int Application::AddHandler(const URL& url,
+                            websocket::WebSocketHandler::Ptr handler) {
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
+  if (0 != ws_handlers_.count(url) || !handler) {
+    return -1;
+  }
+  ws_handlers_[url] = handler;
+  server_->addWebSocketHandler(url, *handler);
+  return 0;
+}
+
+int Application::AddHandler(const URL& url,
+                            websocket::WebSocketHandler* handler) {
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
+  if (0 != ws_handlers_.count(url) || !handler) {
+    return -1;
+  }
+  ws_handlers_[url] = std::shared_ptr<websocket::WebSocketHandler>(handler);
+  server_->addWebSocketHandler(url, *handler);
+  return 0;
+}
+
 void Application::Get(const URL& url, Callback callback) {
   std::lock_guard<std::mutex> guard(handlers_mutex_);
   Bind(url, RequestMethod::GET, callback);
