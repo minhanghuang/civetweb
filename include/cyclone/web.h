@@ -66,8 +66,8 @@ class Application {
   void Init(Options* options);
   void Spin();
   void Stop();
-  int AddHandle(const URL& url, RequestHandler::Ptr handle);
-  int AddHandle(const URL& url, RequestHandler* handle);
+  int AddHandler(const URL& url, RequestHandler::Ptr handler);
+  int AddHandler(const URL& url, RequestHandler* handler);
   void Get(const URL& url, Callback callback);
   void Post(const URL& url, Callback callback);
   void Put(const URL& url, Callback callback);
@@ -79,9 +79,9 @@ class Application {
   void ParseParam(const Options& options);
   void BuildServer();
   void Bind(const URL& url, RequestMethod method, Callback callback);
-  std::mutex mutex_;
+  std::mutex handlers_mutex_;
   std::vector<std::string> options_;
-  std::map<std::string, RequestHandler::Ptr> handler_pool_;
+  std::map<std::string, RequestHandler::Ptr> handlers_;
   std::shared_ptr<Server> server_;
 };
 

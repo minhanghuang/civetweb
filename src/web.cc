@@ -184,12 +184,12 @@ void Application::BuildServer() {
 void Application::Bind(const URL& url, RequestMethod method,
                        Callback callback) {
   RequestHandler::Ptr handler = nullptr;
-  if (0 == handler_pool_.count(url)) {
+  if (0 == handlers_.count(url)) {
     handler = std::make_shared<RequestHandler>();
-    handler_pool_[url] = handler;
-    AddHandle(url, handler);
+    handlers_[url] = handler;
+    server_->addHandler(url, *handler);
   } else {
-    handler = handler_pool_[url];
+    handler = handlers_[url];
   }
   handler->RegisterMethod(method, callback);
 }
@@ -217,48 +217,48 @@ void Application::Stop() {
   mg_exit_library();
 }
 
-int Application::AddHandle(const URL& url, RequestHandler::Ptr handle) {
-  std::lock_guard<std::mutex> guard(mutex_);
-  if (0 != handler_pool_.count(url)) {
+int Application::AddHandler(const URL& url, RequestHandler::Ptr handler) {
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
+  if (0 != handlers_.count(url) || !handler) {
     return -1;
   }
-  handler_pool_[url] = handle;
-  server_->addHandler(url, *handle);
+  handlers_[url] = handler;
+  server_->addHandler(url, *handler);
   return 0;
 }
 
-int Application::AddHandle(const URL& url, RequestHandler* handle) {
-  std::lock_guard<std::mutex> guard(mutex_);
-  if (0 != handler_pool_.count(url)) {
+int Application::AddHandler(const URL& url, RequestHandler* handler) {
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
+  if (0 != handlers_.count(url) || !handler) {
     return -1;
   }
-  handler_pool_[url] = std::shared_ptr<RequestHandler>(handle);
-  server_->addHandler(url, handle);
+  handlers_[url] = std::shared_ptr<RequestHandler>(handler);
+  server_->addHandler(url, handler);
   return 0;
 }
 
 void Application::Get(const URL& url, Callback callback) {
-  std::lock_guard<std::mutex> guard(mutex_);
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
   Bind(url, RequestMethod::GET, callback);
 }
 
 void Application::Post(const URL& url, Callback callback) {
-  std::lock_guard<std::mutex> guard(mutex_);
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
   Bind(url, RequestMethod::POST, callback);
 }
 
 void Application::Put(const URL& url, Callback callback) {
-  std::lock_guard<std::mutex> guard(mutex_);
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
   Bind(url, RequestMethod::PUT, callback);
 }
 
 void Application::Delete(const URL& url, Callback callback) {
-  std::lock_guard<std::mutex> guard(mutex_);
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
   Bind(url, RequestMethod::DELETE, callback);
 }
 
 void Application::Patch(const URL& url, Callback callback) {
-  std::lock_guard<std::mutex> guard(mutex_);
+  std::lock_guard<std::mutex> guard(handlers_mutex_);
   Bind(url, RequestMethod::PATCH, callback);
 }
 

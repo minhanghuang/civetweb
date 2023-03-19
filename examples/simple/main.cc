@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
   // app
   auto app = std::make_shared<cyclone::web::Application>();
   app->Init(options);
-  app->AddHandle("/cyclone/examples/simple/", api1);
+  app->AddHandler("/cyclone/examples/simple/", api1);
   app->Spin();
 
   return 0;
