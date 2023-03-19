@@ -87,28 +87,52 @@ void WebSocketHandler::OnPing(Server* server, Connection* conn) {}
 
 void WebSocketHandler::OnClose(Server* server, const Connection* conn) {}
 
-void WebSocketHandler::SendData(Connection* conn, const std::string& data,
+bool WebSocketHandler::SendData(Connection* conn, const std::string& data,
                                 bool skippable, unsigned char op_code) {
   std::shared_ptr<std::mutex> conn_mutex;
   {
     std::lock_guard<std::mutex> guard(mutex_);
     if (0 == conns_.count(conn)) {
-      return;
+      return false;
     }
     conn_mutex = conns_[conn];
   }
+
+  if (!conn_mutex->try_lock()) {
+    // 其他线程占用
+    if (skippable) {
+      // 跳过
+      return false;
+    }
+    // 阻塞等待其他线程释放该锁
+    conn_mutex->lock();  // 上锁
+    std::lock_guard<std::mutex> guard(mutex_);
+    if (0 == conns_.count(conn)) {
+      return false;
+    }
+  }
+
   {
     // send
-    std::lock_guard<std::mutex> guard(*conn_mutex);
     int ret = mg_websocket_write(conn, op_code, data.c_str(), data.size());
+    conn_mutex->unlock();  // 解锁
+    if (ret != static_cast<int>(data.size())) {
+      // When data is empty, the header length (2) is returned.
+      if (data.empty() && ret == 2) {
+        return true;
+      }
+      return false;
+    }
   }
+
+  return true;
 }
 
-void WebSocketHandler::BroadcastData(const std::string& data, bool skippable,
+bool WebSocketHandler::BroadcastData(const std::string& data, bool skippable,
                                      unsigned char op_code) {
   std::vector<Connection*> conns_to_send;
   if (conns_.empty()) {
-    return;
+    return false;
   }
 
   {
@@ -120,9 +144,13 @@ void WebSocketHandler::BroadcastData(const std::string& data, bool skippable,
     }
   }
 
+  bool all_success = true;
   for (Connection* conn : conns_to_send) {
-    SendData(conn, data, skippable, op_code);
+    if (!SendData(conn, data, skippable, op_code)) {
+      all_success = false;
+    }
   }
+  return all_success;
 }
 
 }  // namespace websocket

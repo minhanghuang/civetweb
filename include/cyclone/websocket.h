@@ -26,10 +26,10 @@ class WebSocketHandler : public CivetWebSocketHandler {
   virtual void OnPong(Server* server, Connection* conn);
   virtual void OnPing(Server* server, Connection* conn);
   virtual void OnClose(Server* server, const Connection* conn);
-  virtual void SendData(Connection* conn, const std::string& data,
-                        bool skippable = false,
+  virtual bool SendData(Connection* conn, const std::string& data,
+                        bool skippable = true,
                         OpCode op_code = WebSocketOpCode::TEXT);
-  virtual void BroadcastData(const std::string& data, bool skippable,
+  virtual bool BroadcastData(const std::string& data, bool skippable,
                              OpCode op_code = WebSocketOpCode::TEXT);
 
  private:
