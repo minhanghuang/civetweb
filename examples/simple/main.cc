@@ -2,19 +2,20 @@
 #include <memory>
 
 #include "cyclone/cyclone.h"
+#include "cyclone/define.h"
 #include "cyclone/options.h"
 #include "cyclone/web.h"
 
 class MyApi1 : public cyclone::web::RequestHandler {
  public:
-  void Get() override {
+  void Get(cyclone::Server* server, cyclone::Connection* conn) override {
     std::cout << "simple get" << std::endl;
-    Response("simple get");
+    Response(server, conn, "simple get");
   }
 
-  void Post() override {
+  void Post(cyclone::Server* server, cyclone::Connection* conn) override {
     std::cout << "simple post" << std::endl;
-    Response("simple get");
+    Response(server, conn, "simple get");
   }
 };
 

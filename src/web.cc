@@ -5,9 +5,7 @@ namespace web {
 
 bool RequestHandler::handleGet(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::GET)) {
-    server_ = server;
-    conn_ = conn;
-    Get();
+    Get(server, conn);
   } else {
     register_cb_[RequestMethod::GET](server, conn);
   }
@@ -16,9 +14,7 @@ bool RequestHandler::handleGet(Server* server, Connection* conn) {
 
 bool RequestHandler::handlePost(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::POST)) {
-    server_ = server;
-    conn_ = conn;
-    Post();
+    Post(server, conn);
   } else {
     register_cb_[RequestMethod::POST](server, conn);
   }
@@ -27,9 +23,7 @@ bool RequestHandler::handlePost(Server* server, Connection* conn) {
 
 bool RequestHandler::handlePut(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::PUT)) {
-    server_ = server;
-    conn_ = conn;
-    Put();
+    Put(server, conn);
   } else {
     register_cb_[RequestMethod::PUT](server, conn);
   }
@@ -38,9 +32,7 @@ bool RequestHandler::handlePut(Server* server, Connection* conn) {
 
 bool RequestHandler::handleDelete(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::DELETE)) {
-    server_ = server;
-    conn_ = conn;
-    Delete();
+    Delete(server, conn);
   } else {
     register_cb_[RequestMethod::DELETE](server, conn);
   }
@@ -49,28 +41,31 @@ bool RequestHandler::handleDelete(Server* server, Connection* conn) {
 
 bool RequestHandler::handlePatch(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::PATCH)) {
-    server_ = server;
-    conn_ = conn;
-    Patch();
+    Patch(server, conn);
   } else {
     register_cb_[RequestMethod::PATCH](server, conn);
   }
   return true;
 }
 
-void RequestHandler::Get() { Response("get"); }
+void RequestHandler::Get(Server* server, Connection* conn) {
+  Response(server, conn, "get");
+}
 
-void RequestHandler::Post() { Response("post"); }
+void RequestHandler::Post(Server* server, Connection* conn) {
+  Response(server, conn, "post");
+}
 
-void RequestHandler::Put() { Response("put"); }
+void RequestHandler::Put(Server* server, Connection* conn) {
+  Response(server, conn, "put");
+}
 
-void RequestHandler::Delete() { Response("delete"); }
+void RequestHandler::Delete(Server* server, Connection* conn) {
+  Response(server, conn, "delete");
+}
 
-void RequestHandler::Patch() { Response("patch"); }
-
-void RequestHandler::Response(const std::string& data,
-                              const std::string& content_type) {
-  RequestHandler::Response(server_, conn_, data, content_type);
+void RequestHandler::Patch(Server* server, Connection* conn) {
+  Response(server, conn, "patch");
 }
 
 void RequestHandler::Response(Server* server, Connection* conn,
@@ -80,25 +75,13 @@ void RequestHandler::Response(Server* server, Connection* conn,
   mg_write(conn, data.c_str(), data.size());
 }
 
-int RequestHandler::Write(const void* data, size_t len) {
-  return RequestHandler::Write(server_, conn_, data, len);
-}
-
 int RequestHandler::Write(Server* server, Connection* conn, const void* data,
                           size_t len) {
   return mg_write(conn, data, len);
 }
 
-std::string RequestHandler::GetRequestData() {
-  return RequestHandler::GetRequestData(conn_);
-}
-
 std::string RequestHandler::GetRequestData(Connection* conn) {
   return Server::getPostData(conn);
-}
-
-std::string RequestHandler::GetParam(const char* key, size_t occurrence) {
-  return RequestHandler::GetParam(conn_, key, occurrence);
 }
 
 std::string RequestHandler::GetParam(Connection* conn, const char* key,
@@ -108,16 +91,8 @@ std::string RequestHandler::GetParam(Connection* conn, const char* key,
   return ret;
 }
 
-const RequestInfo* RequestHandler::GetRequestInfo() {
-  return RequestHandler::GetRequestInfo(conn_);
-}
-
 const RequestInfo* RequestHandler::GetRequestInfo(Connection* conn) {
   return mg_get_request_info(conn);
-}
-
-std::string RequestHandler::GetCookie(const std::string& name) {
-  return RequestHandler::GetCookie(conn_, name);
 }
 
 std::string RequestHandler::GetCookie(Connection* conn,
@@ -127,17 +102,8 @@ std::string RequestHandler::GetCookie(Connection* conn,
   return s;
 }
 
-std::string RequestHandler::GetMethod() {
-  return RequestHandler::GetMethod(conn_);
-}
-
 std::string RequestHandler::GetMethod(Connection* conn) {
   return Server::getMethod(conn);
-}
-
-int RequestHandler::AddResoposeHeader(const std::string& header,
-                                      const std::string& value) {
-  return RequestHandler::AddResoposeHeader(conn_, header, value);
 }
 
 int RequestHandler::AddResoposeHeader(Connection* conn,

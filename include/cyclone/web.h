@@ -18,32 +18,23 @@ namespace web {
 class RequestHandler : public CivetHandler {
  public:
   typedef std::shared_ptr<RequestHandler> Ptr;
-  RequestHandler() : server_(nullptr), conn_(nullptr) {}
-  virtual void Get();
-  virtual void Post();
-  virtual void Put();
-  virtual void Delete();
-  virtual void Patch();
-  void Response(const std::string& data,
-                const std::string& content_type = CYCLONE_HEADER_CONTENT_TYPE);
+  RequestHandler() = default;
+  virtual void Get(Server* server, Connection* conn);
+  virtual void Post(Server* server, Connection* conn);
+  virtual void Put(Server* server, Connection* conn);
+  virtual void Delete(Server* server, Connection* conn);
+  virtual void Patch(Server* server, Connection* conn);
   static void Response(
       Server* server, Connection* conn, const std::string& data,
       const std::string& content_type = CYCLONE_HEADER_CONTENT_TYPE);
-  int Write(const void* data, size_t len);
   static int Write(Server* server, Connection* conn, const void* data,
                    size_t len);
-  const RequestInfo* GetRequestInfo();
   static const RequestInfo* GetRequestInfo(Connection* conn);
-  std::string GetRequestData();
   static std::string GetRequestData(Connection* conn);
-  std::string GetParam(const char* key, size_t occurrence = 0);
   static std::string GetParam(Connection* conn, const char* key,
                               size_t occurrence = 0);
-  std::string GetCookie(const std::string& name);
   static std::string GetCookie(Connection* conn, const std::string& name);
-  std::string GetMethod();
   static std::string GetMethod(Connection* conn);
-  int AddResoposeHeader(const std::string& header, const std::string& value);
   static int AddResoposeHeader(Connection* conn, const std::string& header,
                                const std::string& value);
   void RegisterMethod(RequestMethod method, Callback callback);
@@ -54,8 +45,6 @@ class RequestHandler : public CivetHandler {
   bool handlePut(Server* server, Connection* conn) override;
   bool handleDelete(Server* server, Connection* conn) override;
   bool handlePatch(Server* server, Connection* conn) override;
-  Server* server_;
-  Connection* conn_;
   std::map<RequestMethod, Callback> register_cb_;
 };
 
