@@ -8,6 +8,8 @@
 
 #include "cyclone/civetweb/CivetServer.h"
 
+#define CYCLONE_HEADER_CONTENT_TYPE "application/json; charset=utf-8"
+
 namespace cyclone {
 
 typedef mg_connection Connection;

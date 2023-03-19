@@ -8,6 +8,7 @@ set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(BUILD_EXAMPLES "BUILD EXAMPLES" OFF)
 option(BUILD_SHARED_LIBS "BUILD SHARED LIBS" ON)
 
 if(NOT MACOSX AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -424,6 +425,10 @@ install(DIRECTORY include
     PATTERN "*.hpp"
     PATTERN "*.inl"
 )
+
+if(BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif(BUILD_EXAMPLES)
 
 include(CTest)
 include(CMakePackageConfigHelpers)

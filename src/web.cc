@@ -5,7 +5,9 @@ namespace web {
 
 bool RequestHandler::handleGet(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::GET)) {
-    this->Get(server, conn);
+    server_ = server;
+    conn_ = conn;
+    Get();
   } else {
     register_cb_[RequestMethod::GET](server, conn);
   }
@@ -14,7 +16,9 @@ bool RequestHandler::handleGet(Server* server, Connection* conn) {
 
 bool RequestHandler::handlePost(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::POST)) {
-    this->Post(server, conn);
+    server_ = server;
+    conn_ = conn;
+    Post();
   } else {
     register_cb_[RequestMethod::POST](server, conn);
   }
@@ -23,7 +27,9 @@ bool RequestHandler::handlePost(Server* server, Connection* conn) {
 
 bool RequestHandler::handlePut(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::PUT)) {
-    this->Put(server, conn);
+    server_ = server;
+    conn_ = conn;
+    Put();
   } else {
     register_cb_[RequestMethod::PUT](server, conn);
   }
@@ -32,7 +38,9 @@ bool RequestHandler::handlePut(Server* server, Connection* conn) {
 
 bool RequestHandler::handleDelete(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::DELETE)) {
-    this->Delete(server, conn);
+    server_ = server;
+    conn_ = conn;
+    Delete();
   } else {
     register_cb_[RequestMethod::DELETE](server, conn);
   }
@@ -41,37 +49,39 @@ bool RequestHandler::handleDelete(Server* server, Connection* conn) {
 
 bool RequestHandler::handlePatch(Server* server, Connection* conn) {
   if (0 == register_cb_.count(RequestMethod::PATCH)) {
-    this->Patch(server, conn);
+    server_ = server;
+    conn_ = conn;
+    Patch();
   } else {
     register_cb_[RequestMethod::PATCH](server, conn);
   }
   return true;
 }
 
-void RequestHandler::Get(Server* server, Connection* conn) {
-  Response(server, conn, "get");
-}
+void RequestHandler::Get() { Response("get"); }
 
-void RequestHandler::Post(Server* server, Connection* conn) {
-  Response(server, conn, "post");
-}
+void RequestHandler::Post() { Response("post"); }
 
-void RequestHandler::Put(Server* server, Connection* conn) {
-  Response(server, conn, "put");
-}
+void RequestHandler::Put() { Response("put"); }
 
-void RequestHandler::Delete(Server* server, Connection* conn) {
-  Response(server, conn, "delete");
-}
+void RequestHandler::Delete() { Response("delete"); }
 
-void RequestHandler::Patch(Server* server, Connection* conn) {
-  Response(server, conn, "patch");
+void RequestHandler::Patch() { Response("patch"); }
+
+void RequestHandler::Response(const std::string& data,
+                              const std::string& content_type) {
+  RequestHandler::Response(server_, conn_, data, content_type);
 }
 
 void RequestHandler::Response(Server* server, Connection* conn,
-                              const std::string& data) {
-  mg_send_http_ok(conn, "serverlication/json; charset=utf-8", data.size());
+                              const std::string& data,
+                              const std::string& content_type) {
+  mg_send_http_ok(conn, content_type.c_str(), data.size());
   mg_write(conn, data.c_str(), data.size());
+}
+
+int RequestHandler::Write(const void* data, size_t len) {
+  return RequestHandler::Write(server_, conn_, data, len);
 }
 
 int RequestHandler::Write(Server* server, Connection* conn, const void* data,
@@ -79,8 +89,16 @@ int RequestHandler::Write(Server* server, Connection* conn, const void* data,
   return mg_write(conn, data, len);
 }
 
+std::string RequestHandler::GetRequestData() {
+  return RequestHandler::GetRequestData(conn_);
+}
+
 std::string RequestHandler::GetRequestData(Connection* conn) {
   return Server::getPostData(conn);
+}
+
+std::string RequestHandler::GetParam(const char* key, size_t occurrence) {
+  return RequestHandler::GetParam(conn_, key, occurrence);
 }
 
 std::string RequestHandler::GetParam(Connection* conn, const char* key,
@@ -90,8 +108,16 @@ std::string RequestHandler::GetParam(Connection* conn, const char* key,
   return ret;
 }
 
+const RequestInfo* RequestHandler::GetRequestInfo() {
+  return RequestHandler::GetRequestInfo(conn_);
+}
+
 const RequestInfo* RequestHandler::GetRequestInfo(Connection* conn) {
   return mg_get_request_info(conn);
+}
+
+std::string RequestHandler::GetCookie(const std::string& name) {
+  return RequestHandler::GetCookie(conn_, name);
 }
 
 std::string RequestHandler::GetCookie(Connection* conn,
@@ -101,8 +127,17 @@ std::string RequestHandler::GetCookie(Connection* conn,
   return s;
 }
 
+std::string RequestHandler::GetMethod() {
+  return RequestHandler::GetMethod(conn_);
+}
+
 std::string RequestHandler::GetMethod(Connection* conn) {
   return Server::getMethod(conn);
+}
+
+int RequestHandler::AddResoposeHeader(const std::string& header,
+                                      const std::string& value) {
+  return RequestHandler::AddResoposeHeader(conn_, header, value);
 }
 
 int RequestHandler::AddResoposeHeader(Connection* conn,
@@ -120,34 +155,34 @@ void RequestHandler::RegisterMethod(RequestMethod method, Callback callback) {
   register_cb_[method] = callback;
 }
 
-Application::Application(const Options& options) : options_(options) {
-  ParseParam();
-}
+Application::~Application() {}
 
-Application::Application(Options* options) : options_(*options) {
-  ParseParam();
-}
+Application::Application() {}
 
-void Application::ParseParam() {
-  std::vector<std::string> options;
-  options = {
+void Application::CivetInit() { mg_init_library(MG_FEATURES_DEFAULT); }
+
+void Application::ParseParam(const Options& options) {
+  options_.clear();
+  options_ = {
       "document_root",
-      options_.root,
+      options.root,
       "listening_ports",
-      std::to_string(options_.port),
+      std::to_string(options.port),
       "access_control_allow_headers",
-      options_.access_control_allow_headers,
+      options.access_control_allow_headers,
       "access_control_allow_methods",
-      options_.access_control_allow_methods,
+      options.access_control_allow_methods,
       "access_control_allow_origin",
-      options_.access_control_allow_origin,
+      options.access_control_allow_origin,
   };
-  server_ = std::make_shared<Server>(options);
+}
+
+void Application::BuildServer() {
+  server_ = std::make_shared<Server>(options_);
 }
 
 void Application::Bind(const URL& url, RequestMethod method,
                        Callback callback) {
-  std::lock_guard<std::mutex> guard(mutex_);
   RequestHandler::Ptr handler = nullptr;
   if (0 == handler_pool_.count(url)) {
     handler = std::make_shared<RequestHandler>();
@@ -159,7 +194,28 @@ void Application::Bind(const URL& url, RequestMethod method,
   handler->RegisterMethod(method, callback);
 }
 
-void Application::Spin() {}
+void Application::Init(const Options& options) {
+  CivetInit();
+  ParseParam(options);
+  BuildServer();
+}
+
+void Application::Init(Options* options) {
+  CivetInit();
+  ParseParam(*options);
+  BuildServer();
+}
+
+void Application::Spin() {
+  while (true) {
+    sleep(1);
+  }
+}
+
+void Application::Stop() {
+  server_->close();
+  mg_exit_library();
+}
 
 int Application::AddHandle(const URL& url, RequestHandler::Ptr handle) {
   std::lock_guard<std::mutex> guard(mutex_);
@@ -182,22 +238,27 @@ int Application::AddHandle(const URL& url, RequestHandler* handle) {
 }
 
 void Application::Get(const URL& url, Callback callback) {
+  std::lock_guard<std::mutex> guard(mutex_);
   Bind(url, RequestMethod::GET, callback);
 }
 
 void Application::Post(const URL& url, Callback callback) {
+  std::lock_guard<std::mutex> guard(mutex_);
   Bind(url, RequestMethod::POST, callback);
 }
 
 void Application::Put(const URL& url, Callback callback) {
+  std::lock_guard<std::mutex> guard(mutex_);
   Bind(url, RequestMethod::PUT, callback);
 }
 
 void Application::Delete(const URL& url, Callback callback) {
+  std::lock_guard<std::mutex> guard(mutex_);
   Bind(url, RequestMethod::DELETE, callback);
 }
 
 void Application::Patch(const URL& url, Callback callback) {
+  std::lock_guard<std::mutex> guard(mutex_);
   Bind(url, RequestMethod::PATCH, callback);
 }
 
