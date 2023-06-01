@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <mutex>
 #include <string>
 
 #include "cyclone/civetweb/CivetServer.h"

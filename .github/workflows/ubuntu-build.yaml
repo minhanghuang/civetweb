@@ -1,0 +1,38 @@
+name: ubuntu build
+run-name: build runner on ubuntu 🚀
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    paths:
+      - 'cmake/**'
+      - 'include/**/*.h'
+      - 'src/**/*.cc'
+      - 'CMakeLists.txt'
+      - 'scripts/**'
+      - '.github/workflows/ubuntu-build.yaml'
+
+jobs:
+  build-amd-ubuntu:
+    strategy:
+      matrix:
+        os: ["16.04", "18.04", "20.04", "22.04", "latest"]
+    runs-on: ubuntu-latest
+    container:
+      image: docker://ubuntu:${{ matrix.os }}
+      options: --volume ${{ github.workspace }}:/workspace/${{ github.repository }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Install
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          apt update
+          apt install -y git pkg-config g++ cmake
+      - name: Build
+        run: |
+          bash -c "cd /workspace/${{ github.repository }} && ./scripts/build.sh"

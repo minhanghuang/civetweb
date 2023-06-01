@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <functional>
 #include <thread>
 #include <unordered_map>
 
