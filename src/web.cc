@@ -1,5 +1,7 @@
 #include "cyclone/web.h"
 
+#include <string>
+
 namespace cyclone {
 namespace web {
 
@@ -140,6 +142,10 @@ void Application::ParseParam(const Options& options) {
       options.access_control_allow_methods,
       "access_control_allow_origin",
       options.access_control_allow_origin,
+      "request_timeout_ms",
+      std::to_string(options.request_timeout_ms),
+      "enable_websocket_ping_pong",
+      options.enable_websocket_ping_pong ? "yes" : "no",
   };
 }
 

@@ -56,24 +56,14 @@ bool WebSocketHandler::handleData(Server* server, Connection* conn, int bits,
 void WebSocketHandler::handleClose(Server* server, const Connection* conn) {
   auto* connection = const_cast<Connection*>(conn);
 
-  std::shared_ptr<std::mutex> conn_mutex;
   {
     std::lock_guard<std::mutex> guard(mutex_);
-    if (0 == conns_.count(connection)) {
+    if (conns_.count(connection)) {
+      conns_.erase(connection);
       return;
     }
-    conn_mutex = conns_[connection];
   }
-
-  {
-    std::lock_guard<std::mutex> guard(*conn_mutex);
-    OnClose(server, conn);
-  }
-
-  {
-    std::lock_guard<std::mutex> guard(mutex_);
-    conns_.erase(connection);
-  }
+  OnClose(server, conn);
 }
 
 void WebSocketHandler::Open(Server* server, const Connection* conn) {}
@@ -98,31 +88,25 @@ bool WebSocketHandler::SendData(Connection* conn, const std::string& data,
     conn_mutex = conns_[conn];
   }
 
-  if (!conn_mutex->try_lock()) {
-    // 其他线程占用
-    if (skippable) {
-      // 跳过
-      return false;
-    }
-    // 阻塞等待其他线程释放该锁
-    conn_mutex->lock();  // 上锁
-    std::lock_guard<std::mutex> guard(mutex_);
-    if (0 == conns_.count(conn)) {
-      return false;
-    }
+  if (nullptr == conn_mutex || !conn_mutex->try_lock()) {
+    return false;
   }
 
-  {
-    // send
-    int ret = mg_websocket_write(conn, op_code, data.c_str(), data.size());
-    conn_mutex->unlock();  // 解锁
-    if (ret != static_cast<int>(data.size())) {
-      // When data is empty, the header length (2) is returned.
-      if (data.empty() && ret == 2) {
-        return true;
-      }
-      return false;
+  int ret = mg_websocket_write(conn, op_code, data.c_str(), data.size());
+  conn_mutex->unlock();  // 解锁
+
+  if (ret != static_cast<int>(data.size())) {
+    // When data is empty, the header length (2) is returned.
+    if (data.empty() && ret == 2) {
+      return true;
     }
+    {
+      std::lock_guard<std::mutex> guard(mutex_);
+      if (conns_.count(conn)) {
+        conns_.erase(conn);
+      }
+    }
+    return false;
   }
 
   return true;

@@ -14,7 +14,9 @@ struct Options {
         root(""),
         access_control_allow_headers("*"),
         access_control_allow_methods("*"),
-        access_control_allow_origin("*") {}
+        access_control_allow_origin("*"),
+        request_timeout_ms(200),
+        enable_websocket_ping_pong(false) {}
   size_t port;
   size_t websocket_ping_interval;
   size_t num_threads;
@@ -22,6 +24,8 @@ struct Options {
   std::string access_control_allow_headers;
   std::string access_control_allow_methods;
   std::string access_control_allow_origin;
+  int request_timeout_ms;
+  bool enable_websocket_ping_pong;
 };
 
 }  // namespace cyclone
