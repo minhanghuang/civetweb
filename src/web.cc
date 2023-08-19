@@ -108,7 +108,7 @@ std::string RequestHandler::GetMethod(Connection* conn) {
   return Server::getMethod(conn);
 }
 
-int RequestHandler::AddResoposeHeader(Connection* conn,
+int RequestHandler::AddResponseHeader(Connection* conn,
                                       const std::string& header,
                                       const std::string& value) {
   if (header.empty() || value.empty()) {

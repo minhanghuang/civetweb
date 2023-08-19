@@ -35,7 +35,7 @@ class RequestHandler : public CivetHandler {
                               size_t occurrence = 0);
   static std::string GetCookie(Connection* conn, const std::string& name);
   static std::string GetMethod(Connection* conn);
-  static int AddResoposeHeader(Connection* conn, const std::string& header,
+  static int AddResponseHeader(Connection* conn, const std::string& header,
                                const std::string& value);
   void RegisterMethod(RequestMethod method, Callback callback);
 
